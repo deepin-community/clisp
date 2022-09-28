@@ -1,0 +1,55 @@
+# Makefile for CLISP module set pari
+
+srcdir = @srcdir@
+CC = @CC@
+PARICPPFLAGS = @CPPFLAGS@
+CFLAGS = @CFLAGS@
+CLISP = @CLISP@ -norc -q
+CLISP_LINKKIT = @CLISP_LINKKIT@
+prefix = @LIBPARI_PREFIX@
+datarootdir = @datarootdir@
+PARI_DATADIR = @PARI_DATADIR@
+
+LN = @LN@
+LN_S = @LN_S@
+
+MAKE = make
+
+SHELL = /bin/sh
+
+ALL_CFLAGS = $(CPPFLAGS) $(PARICPPFLAGS) $(CFLAGS) -I$(CLISP_LINKKIT) \
+  -I$(srcdir) # for cpari.h
+
+GENERATED = pari.o cpari.o pari.fas preload.lisp
+DISTRIBFILES = link.sh Makefile $(GENERATED) \
+	$(srcdir)/pari.lisp $(srcdir)/desc2lisp.lisp $(srcdir)/README
+distribdir =
+
+# default target: make the module
+clisp-module : $(GENERATED)
+
+desc2lisp.fas : $(srcdir)/desc2lisp.lisp
+	$(CLISP) -c $(srcdir)/desc2lisp.lisp -o ./
+
+pari.fas pari.c : $(srcdir)/pari.lisp desc2lisp.fas
+	$(CLISP) -i desc2lisp -c $(srcdir)/pari.lisp -o ./ $(PARI_DATADIR)
+
+pari.o : pari.c config.h
+	$(CC) $(ALL_CFLAGS) -c pari.c
+
+cpari.o : $(srcdir)/cpari.c
+	$(CC) -I. $(ALL_CFLAGS) -c $(srcdir)/cpari.c
+
+preload.lisp : $(srcdir)/preload.lisp
+	$(LN_S) $(srcdir)/preload.lisp .
+
+# Make a module distribution into $(distribdir)
+clisp-module-distrib : clisp-module force
+	$(LN) $(DISTRIBFILES) $(distribdir)
+
+clean : force
+	rm -f core *.o *.a *.fas *.lib
+
+distclean : clean
+
+force :

@@ -1,0 +1,60 @@
+#!/usr/bin/make -f
+
+include /usr/share/dpkg/architecture.mk
+
+# Disable -fstack-protector-strong (and PIE on ppc64el and s390x, see
+# LP: #1931531 for more on that)
+ifneq (,$(filter $(DEB_BUILD_ARCH), ppc64el s390x))
+export DEB_BUILD_MAINT_OPTIONS=hardening=-stackprotectorstrong,-pie
+else
+export DEB_BUILD_MAINT_OPTIONS=hardening=-stackprotectorstrong
+endif
+
+# Needed for the libsvm module
+export DEB_CPPFLAGS_MAINT_APPEND=-I/usr/include/libsvm
+
+%:
+	dh $@ --builddirectory=debian/build --no-parallel
+
+override_dh_auto_configure:
+	./configure debian/build \
+		--prefix=/usr \
+		--fsstnd=debian \
+		--with-dynamic-ffi \
+		--with-dynamic-modules \
+		--with-module=gdbm \
+		--with-module=berkeley-db \
+		--with-module=pcre \
+		--with-module=rawsock \
+		--with-module=clx/new-clx \
+		--with-module=bindings/glibc \
+		--with-module=postgresql \
+		--with-module=zlib \
+		--with-module=dbus \
+		--with-module=asdf \
+		--with-module=fastcgi \
+		--with-module=libsvm \
+		--with-module=pari
+
+execute_after_dh_install:
+	# remove unwanted upstream doc/ files
+	rm -f debian/clisp-doc/usr/share/doc/clisp/doc/clisp.1 \
+		debian/clisp-doc/usr/share/doc/clisp/doc/clisp-link.1 \
+		debian/clisp-doc/usr/share/doc/clisp/COPYRIGHT \
+		debian/clisp-doc/usr/share/doc/clisp/GNU-GPL
+	# Remove unwanted demos in /usr/lib (they are already shipped under /usr/share/doc/)
+	rm -rf debian/clisp-module-clx/usr/lib/clisp-*/clx/new-clx/demos/
+
+override_dh_installchangelogs:
+	dh_installchangelogs src/ChangeLog
+
+execute_after_dh_fixperms-arch:
+	# Make scripts executable to make lintian happy
+	chmod +x debian/clisp/usr/lib/clisp-*/build-aux/config.rpath \
+		debian/clisp/usr/lib/clisp-*/build-aux/depcomp
+
+execute_before_dh_gencontrol-arch:
+	# add FAS file format version to substvars
+	debian/clisp/usr/bin/clisp -Efile utf-8 -B debian/clisp/usr/lib/clisp-* -M debian/clisp/usr/lib/clisp-*/base/lispinit.mem debian/fasl-version.lisp
+	# add memfile hash to substvars
+	echo "clisp:memfile-hash=clisp-memfile-hash-$$(debian/clisp/usr/bin/clisp -B debian/clisp/usr/lib/clisp-* -memfile-hash)" >> debian/clisp.substvars

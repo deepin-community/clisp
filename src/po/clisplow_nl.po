@@ -1,0 +1,456 @@
+# Dutch translations for clisp.
+# Copyright (C) 2008 Free Software Foundation, Inc.
+# Copyright (C) 1992-2008 Bruno Haible, Michael Stoll, Marcus Daniels, Sam Steingold
+# This file is distributed under the same license as the clisp package.
+#
+# Opmerkingen over de Nederlandse vertaling:
+#
+# Veel technische termen zijn, naar voorbeeld van de Duitse vertaling,
+# onvertaald Engels gebleven.  Dit geldt voor alle hoofdletterwoorden,
+# maar ook voor woorden als: stream, byte, string, en unintern.  Dit om
+# ervoor te zorgen dat de programmeur, die enkel Engelse boeken over
+# Common Lisp heeft kunnen lezen, niet te veel afgeschrikt wordt.
+# Misschien moeten deze onvertaalde woorden worden voorzien van
+# aanhalingstekens?
+#
+# Merk op dat dit slechts een eerste vertaling naar het Nederlands is en
+# dat over veel onderwerpen langer nagedacht kan worden.  Aarzel niet het
+# laten horen als u ergens andere ideeën over hebt!
+#
+# Tijs van Bakel <smoke@casema.net>, 1999, 2000.
+# Benno Schulenberg <benno@vertaalt.nl>, 2007, 2008.
+msgid ""
+msgstr ""
+"Project-Id-Version: clisp-2.45-pre2\n"
+"Report-Msgid-Bugs-To: clisp-devel@lists.sourceforge.net\n"
+"POT-Creation-Date: 2017-06-25 11:29:03+0200\n"
+"PO-Revision-Date: 2008-05-15 00:14+0200\n"
+"Last-Translator: Benno Schulenberg <benno@vertaalt.nl>\n"
+"Language-Team: Dutch <vertaling@vrijschrift.org>\n"
+"Language: nl\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: KBabel 1.11.4\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: spvw.d:909
+msgid "*** - Program stack overflow. RESET"
+msgstr "*** -- Progamma-stapeloverloop.  RESET"
+
+#: spvw.d:924
+msgid "*** - Lisp stack overflow. RESET"
+msgstr "*** -- Lisp-stapeloverloop.  RESET"
+
+#: spvw.d:1190
+msgid "Unknown FSUBR signature: %d %d %d\n"
+msgstr "Onbekende FSUBR-handtekening: %d %d %d\n"
+
+#: spvw.d:1298
+msgid "Unknown SUBR signature: %d %d %d %d"
+msgstr "Onbekende SUBR-handtekening: %d %d %d %d"
+
+#: spvw.d:2022
+msgid "module '%s' requires package %s.\n"
+msgstr "module '%s' vereist pakket %s.\n"
+
+#: spvw.d:2032
+msgid "module '%s' redefines symbol "
+msgstr "module '%s' herdefinieert symbool"
+
+#: spvw.d:2034
+msgid " in the locked package "
+msgstr " in het vergrendelde pakket "
+
+#: spvw.d:2036
+msgid ""
+"\n"
+"old definition: "
+msgstr ""
+"\n"
+"oude definitie: "
+
+#: spvw.d:2073
+#, fuzzy
+msgid "is an ANSI Common Lisp implementation."
+msgstr "is een ANSI Common Lisp."
+
+#: spvw.d:2075
+msgid ""
+"This image does not process the usual command line arguments.\n"
+"To create a normal image \"myclisp\", please do\n"
+"%s --clisp-x '(ext:saveinitmem \"myclisp\" :executable t :init-function nil)'\n"
+msgstr ""
+
+#: spvw.d:2080
+msgid ""
+"Usage:  %s [options] [lispfile [argument ...]]\n"
+" When 'lispfile' is given, it is loaded and '*ARGS*' is set\n"
+" to the list of argument strings. Otherwise, an interactive\n"
+" read-eval-print loop is entered.\n"
+msgstr ""
+
+#: spvw.d:2084
+#, fuzzy
+msgid "Informative output:"
+msgstr "Informatieve uitvoer:\n"
+
+#: spvw.d:2085
+#, fuzzy
+msgid " -h, --help    - print this help and exit"
+msgstr " -h, --help    - deze hulptekst tonen en stoppen\n"
+
+#: spvw.d:2086
+#, fuzzy
+msgid " --version     - print the version information"
+msgstr " --version     - versie-informatie tonen\n"
+
+#: spvw.d:2087
+#, fuzzy
+msgid " --license     - print the licensing information"
+msgstr " --license     - licentie-informatie tonen\n"
+
+#: spvw.d:2088
+#, fuzzy
+msgid " -help-image   - print image-specific help and exit"
+msgstr " -help-image   - 'image'-specifieke hulp tonen en stoppen\n"
+
+#: spvw.d:2089
+msgid "Memory image selection:"
+msgstr ""
+
+#: spvw.d:2090
+#, fuzzy
+msgid " -B lisplibdir - set the installation directory"
+msgstr " -N nlsmap     - map met NLS-catalogussen\n"
+
+#: spvw.d:2092
+msgid " -K linkingset - use this executable and memory image"
+msgstr ""
+
+#: spvw.d:2094
+msgid " -M memfile    - use this memory image"
+msgstr ""
+
+#: spvw.d:2095
+msgid " -m size       - memory size (size = nB or nKB or nMB)"
+msgstr ""
+
+#: spvw.d:2096
+#, fuzzy
+msgid "Internationalization:"
+msgstr "Internationalisatie:\n"
+
+#: spvw.d:2097
+#, fuzzy
+msgid " -L language   - set user language"
+msgstr " -L taal       - gebruikerstaal instellen\n"
+
+#: spvw.d:2098
+#, fuzzy
+msgid " -N nlsdir     - NLS catalog directory"
+msgstr " -N nlsmap     - map met NLS-catalogussen\n"
+
+#: spvw.d:2099
+msgid " -Edomain encoding - set encoding"
+msgstr ""
+
+#: spvw.d:2100
+msgid "Interoperability:"
+msgstr ""
+
+#: spvw.d:2101
+msgid ""
+" -q, --quiet, --silent, -v, --verbose - verbosity level:\n"
+"     affects banner, *LOAD-VERBOSE*/*COMPILE-VERBOSE*,\n"
+"     and *LOAD-PRINT*/*COMPILE-PRINT*"
+msgstr ""
+
+#: spvw.d:2104
+msgid " -w            - wait for a keypress after program termination"
+msgstr ""
+
+#: spvw.d:2105
+msgid " -I            - be ILISP-friendly"
+msgstr ""
+
+#: spvw.d:2106
+msgid " -disable-readline - do not use the gnu readline library"
+msgstr ""
+
+#: spvw.d:2107
+#, fuzzy
+msgid "Startup actions:"
+msgstr "Opstartacties:\n"
+
+#: spvw.d:2108
+msgid " -ansi         - more ANSI CL compliance"
+msgstr ""
+
+#: spvw.d:2109
+msgid " -traditional  - traditional (undoes -ansi)"
+msgstr ""
+
+#: spvw.d:2110
+msgid " -modern       - start in a case-sensitive lowercase-preferring package"
+msgstr ""
+
+#: spvw.d:2111
+msgid " -p package    - start in the package"
+msgstr ""
+
+#: spvw.d:2112
+msgid " -C            - set *LOAD-COMPILING* to T"
+msgstr ""
+
+#: spvw.d:2113
+msgid " -norc         - do not load the user ~/.clisprc file"
+msgstr ""
+
+#: spvw.d:2114
+msgid " -lp dir       - add dir to *LOAD-PATHS* (can be repeated)"
+msgstr ""
+
+#: spvw.d:2115
+msgid " -i file       - load initfile (can be repeated)"
+msgstr ""
+
+#: spvw.d:2116
+#, fuzzy
+msgid "Actions:"
+msgstr "Acties:\n"
+
+#: spvw.d:2117
+msgid " -c [-l] lispfile [-o outputfile] - compile lispfile"
+msgstr ""
+
+#: spvw.d:2118
+msgid " -x expressions - execute the expressions, then exit"
+msgstr ""
+
+#: spvw.d:2119
+msgid " Depending on the image, positional arguments can mean:"
+msgstr ""
+
+#: spvw.d:2120
+msgid "   lispscript [argument ...] - load script, then exit"
+msgstr ""
+
+#: spvw.d:2121
+msgid "   [argument ...]            - run the init-function"
+msgstr ""
+
+#: spvw.d:2122
+msgid "  arguments are placed in EXT:*ARGS* as strings."
+msgstr ""
+
+#: spvw.d:2123
+msgid "These actions put CLISP into a batch mode, which is overridden by"
+msgstr ""
+
+#: spvw.d:2124
+msgid " -on-error action - action can be one of debug, exit, abort, appease"
+msgstr ""
+
+#: spvw.d:2125
+msgid " -repl            - enter the interactive read-eval-print loop when done"
+msgstr ""
+
+#: spvw.d:2126
+msgid "Default action is an interactive read-eval-print loop."
+msgstr ""
+
+#: spvw.d:2135
+msgid "%s: use '-h' for help"
+msgstr "%s: gebruik '-h' voor hulp"
+
+#: spvw.d:2139
+msgid "invalid argument"
+msgstr "ongeldig argument"
+
+#: spvw.d:2450
+msgid "Syntax for %s: nnnnnnn or nnnnKB or nMB"
+msgstr "Syntaxis voor %s: nnnnnnn of nnnnKB of nMB"
+
+#: spvw.d:2456
+msgid "warning: %s %lu too small, using %lu instead"
+msgstr "waarschuwing: %s %lu is te klein; %lu wordt gebruikt"
+
+#: spvw.d:2462
+msgid "warning: %s %lu too large, using %lu instead"
+msgstr "waarschuwing: %s %lu is te groot; %lu wordt gebruikt"
+
+#: spvw.d:2618
+msgid "memory size"
+msgstr "geheugengrootte"
+
+#: spvw.d:2644
+msgid "multiple -B"
+msgstr "meerdere opties -B"
+
+#: spvw.d:2652
+#, fuzzy
+msgid "This option requires an argument"
+msgstr "-E vereist een argument"
+
+#: spvw.d:2689
+msgid "-E requires an argument"
+msgstr "-E vereist een argument"
+
+#: spvw.d:2924
+msgid "-l without -c is invalid"
+msgstr "-l zonder -c is ongeldig"
+
+#: spvw.d:2930
+msgid "-x with -c is invalid"
+msgstr "-x met -c is ongeldig"
+
+#: spvw.d:2935
+msgid "-x with lisp-file is invalid"
+msgstr "-x met een lisp-bestand is ongeldig"
+
+#: spvw.d:3079
+msgid "Return value of malloc() = %lx is not compatible with type code distribution."
+msgstr "Afsluitwaarde van malloc() is %lx, wat niet compatibel is met typecode-distributie."
+
+#: spvw.d:3086
+msgid "Only %ld bytes available."
+msgstr "Slechts %ld bytes beschikbaar."
+
+#: spvw.d:3321
+msgid "Could not determine the end of the SP stack!"
+msgstr "Kan het einde van de SP-stapel niet bepalen!"
+
+#: spvw.d:4060
+msgid "%s: Not enough memory for Lisp."
+msgstr "%s: Onvoldoende geheugen beschibaar voor Lisp."
+
+#: spvw_alloca.d:48
+msgid "*** - Virtual memory exhausted. RESET"
+msgstr "*** -- Geen virtueel geheugen meer beschikbaar.  RESET"
+
+#: spvw_alloca.d:50
+msgid "*** - Memory exhausted. RESET"
+msgstr "*** -- Geen geheugen meer beschikbaar.  RESET"
+
+#: spvw_mmap.d:105
+msgid "Warning: overwriting existing memory mappings in the address range 0x%lx...0x%lx. clisp will likely crash soon!!\n"
+msgstr ""
+
+#: spvw_mmap.d:161
+msgid "Warning: reserving address range 0x%lx...0x%lx that contains memory mappings. clisp might crash later!\n"
+msgstr ""
+
+#: spvw_mmap.d:203 spvw_mmap.d:323 spvw_mmap.d:496
+msgid "Cannot map memory to address 0x%lx ."
+msgstr "Kan geheugen niet op adres 0x%lx afbeelden."
+
+#: spvw_mmap.d:296
+msgid "Cannot reserve address range at 0x%lx ."
+msgstr "Kan geen geheugenbereik op 0x%lx reserveren."
+
+#: spvw_mmap.d:306
+msgid "Cannot reserve address range 0x%lx-0x%lx ."
+msgstr "Kan geheugenbereik van 0x%x tot 0x%x niet reserveren."
+
+#: spvw_mmap.d:350
+msgid "CreateFileMapping() failed."
+msgstr "CreateFileMapping() is mislukt."
+
+#: spvw_mmap.d:358
+msgid "MapViewOfFileEx(addr=0x%x,off=0x%x) failed."
+msgstr "MapViewOfFileEx(addr=0x%x,off=0x%x) is mislukt."
+
+#: spvw_mmap.d:364
+msgid "MapViewOfFileEx() returned 0x%x instead of 0x%x."
+msgstr "MapViewOfFileEx() gaf 0x%x terug in plaats van 0x%x."
+
+#: spvw_mmap.d:379
+msgid "VirtualFree() failed."
+msgstr "VirtualFree() is mislukt."
+
+#: spvw_mmap.d:393
+msgid "VirtualProtect() failed."
+msgstr "VirtualProtect() is mislukt."
+
+#: spvw_mmap.d:460
+msgid "Cannot open <%s>."
+msgstr "Kan <%s> niet openen."
+
+#: spvw_fault.d:285
+msgid "mprotect(0x%lx,%d,%d) failed."
+msgstr "mprotect(0x%lx,%d,%d) is mislukt."
+
+#: spvw_sigsegv.d:25
+msgid "GC count: %lu"
+msgstr ""
+
+#: spvw_sigsegv.d:27
+msgid "Space collected by GC:"
+msgstr ""
+
+#: spvw_sigsegv.d:41
+msgid "Run time:"
+msgstr ""
+
+#: spvw_sigsegv.d:43
+msgid "Real time:"
+msgstr ""
+
+#: spvw_sigsegv.d:45
+msgid "GC time:"
+msgstr ""
+
+#: spvw_sigsegv.d:48
+msgid "Permanently allocated: %lu bytes."
+msgstr ""
+
+#: spvw_sigsegv.d:51
+msgid "Currently in use: %lu bytes."
+msgstr ""
+
+#: spvw_sigsegv.d:54
+msgid "Free space: %lu bytes."
+msgstr ""
+
+#: spvw_sigsegv.d:65
+msgid "SIGSEGV cannot be cured. Fault address = 0x%lx."
+msgstr "SIGSEGV is ongeneselijk.  Fout-adres = 0x%lx."
+
+#: spvw_sigsegv.d:180
+msgid "Apollo 13 scenario: Stack overflow handling failed. On the next stack overflow we will crash!!!"
+msgstr ""
+"Apollo 13-scenario: afhandeling van stapeloverloop is mislukt;\n"
+"bij de volgende stapeloverloop gaan we plat!!!"
+
+#: spvw_garcol.d:2563 spvw_garcol_old.d:1981
+msgid "munmap() failed."
+msgstr "munmap() is mislukt."
+
+#: spvw_allocate.d:103
+msgid "*** - No more room for LISP objects: RESET"
+msgstr "*** -- Geen ruimte meer voor LISP-objecten:  RESET"
+
+#: spvw_allocate.d:314 spvw_allocate.d:373 spvw_allocate.d:456
+msgid "Trying to make room through a GC..."
+msgstr "Poging om door een GC ruimte te maken..."
+
+#: spvw_memfile.d:991 spvw_memfile.d:1847
+msgid "%s: operating system error during load of initialization file `%s'"
+msgstr "%s: besturingssysteemfout bij het lezen van opstartbestand '%s'"
+
+#: spvw_memfile.d:1512
+msgid "%s: Cannot map the initialization file `%s' into memory."
+msgstr "%s: Kan het opstartbestand '%s' niet in het geheugen afbeelden."
+
+#: spvw_memfile.d:1852
+msgid "%s: initialization file `%s' was not created by this version of CLISP runtime"
+msgstr "%s: opstartbestand '%s' is niet aangemaakt door deze versie van CLISP-runtime"
+
+#: spvw_memfile.d:1856
+msgid "%s: not enough memory for initialization"
+msgstr "%s: onvoldoende geheugen beschikbaar voor initialisatie"
+
+#: spvw_memfile.d:1906
+msgid "%s: 'image size' method failed, but found image header at %d\n"
+msgstr ""

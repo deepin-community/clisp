@@ -1,0 +1,3 @@
+usr/lib/clisp-*/dynmod/lib-pcre.so
+usr/lib/clisp-*/dynmod/pcre.lisp
+usr/lib/clisp-*/pcre

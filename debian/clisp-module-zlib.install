@@ -1,0 +1,3 @@
+usr/lib/clisp-*/dynmod/lib-zlib.so
+usr/lib/clisp-*/dynmod/zlib.lisp
+usr/lib/clisp-*/zlib

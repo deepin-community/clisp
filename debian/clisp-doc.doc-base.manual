@@ -1,0 +1,12 @@
+Document: clisp-manual
+Title: CLISP Manual
+Author: Bruno Haible, Michael Stoll, Sam Steingold
+Abstract: Manual page describing command line options
+Section: Programming
+
+Format: HTML
+Index: /usr/share/doc/clisp/doc/clisp.html
+Files: /usr/share/doc/clisp/doc/clisp.html /usr/share/doc/clisp/doc/clisp.png
+
+Format: PDF
+Files: /usr/share/doc/clisp/doc/clisp.pdf.gz

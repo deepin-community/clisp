@@ -1,0 +1,3 @@
+usr/lib/clisp-*/dynmod/lib-pari.so
+usr/lib/clisp-*/dynmod/pari.lisp
+usr/lib/clisp-*/pari

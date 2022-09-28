@@ -1,0 +1,3 @@
+usr/lib/clisp-*/dynmod/lib-libsvm.so
+usr/lib/clisp-*/dynmod/libsvm.lisp
+usr/lib/clisp-*/libsvm

@@ -1,0 +1,228 @@
+Source: clisp
+Section: lisp
+Priority: optional
+Maintainer: Debian Common Lisp Team <debian-common-lisp@lists.debian.org>
+Uploaders: Peter Van Eynde <pvaneynd@debian.org>,
+           Christoph Egger <christoph@debian.org>,
+           Sébastien Villemot <sebastien@debian.org>
+Build-Depends:
+ debhelper-compat (= 13),
+ debhelper (>= 12.8~),
+ gettext,
+ bison,
+ libncurses5-dev,
+ groff,
+ ghostscript,
+ libx11-dev,
+ libxext-dev,
+ libxpm-dev,
+ libsigsegv-dev (>= 2.11),
+ libreadline-dev,
+ libdb-dev,
+ libffcall-dev,
+ libgdbm-dev,
+ libpq-dev,
+ libpcre3-dev,
+ libdbus-1-dev,
+ zlib1g-dev,
+ libunistring-dev,
+ locales-all,
+ libfcgi-dev,
+ libsvm-dev,
+ libpari-dev
+Standards-Version: 4.6.0
+Homepage: http://www.clisp.org/
+Vcs-Git: https://salsa.debian.org/common-lisp-team/clisp.git
+Vcs-Browser: https://salsa.debian.org/common-lisp-team/clisp
+Rules-Requires-Root: no
+
+Package: clisp
+Architecture: any
+Depends: ${shlibs:Depends},
+         ${misc:Depends},
+         sensible-utils
+Provides: lisp-compiler, ${clisp:fasl-version}, ${clisp:memfile-hash}
+Suggests: gdb,
+          clisp-doc,
+          slime,
+          clisp-module-berkeley-db,
+          clisp-module-clx,
+          clisp-module-dbus,
+          clisp-module-fastcgi,
+          clisp-module-gdbm,
+          clisp-module-libsvm,
+          clisp-module-pari,
+          clisp-module-pcre,
+          clisp-module-postgresql,
+          clisp-module-zlib,
+          hyperspec
+Breaks: clisp-dev (<< 1:2.49.20180212),
+        clisp-module-rawsock (<< 1:2.49.20180212),
+        clisp-module-bindings-glibc (<< 1:2.49.20180212)
+Replaces: clisp-dev (<< 1:2.49.20180212),
+          clisp-module-rawsock (<< 1:2.49.20180212),
+          clisp-module-bindings-glibc (<< 1:2.49.20180212)
+Description: GNU CLISP, a Common Lisp implementation
+ GNU CLISP is a Common Lisp implementation.
+ It conforms to the ANSI Common Lisp standard, and offers many extensions.
+ It runs on all desktop operating systems (GNU and Unix systems, macOS,
+ Windows) and is particularly memory-efficient.
+ .
+ It is Free Software and may be distributed under the terms of GNU GPL,
+ while it is possible to distribute commercial proprietary applications
+ compiled with GNU CLISP.
+ .
+ The user interface comes in English, German, French, Spanish, Dutch,
+ Russian and Danish, and can be changed during run time.
+ .
+ GNU CLISP includes an interpreter, a compiler, a debugger, CLOS, MOP,
+ a foreign language interface, a socket interface, i18n, fast bignums,
+ arbitrary precision floats and more.
+ An X11 interface is available through CLX, Garnet, CLUE/CLIO.
+ GNU CLISP runs Maxima, ACL2 and many other Common Lisp packages.
+ .
+ This package contains the main CLISP executable, the link-kit, and the
+ following modules: i18n, regexp, syscalls, readline, ASDF, rawsock,
+ bindings/glibc.
+
+Package: clisp-doc
+Section: doc
+Architecture: all
+Multi-Arch: foreign
+Depends: ${misc:Depends}
+Description: GNU CLISP, a Common Lisp implementation (documentation)
+ GNU CLISP is a Common Lisp implementation.
+ It conforms to the ANSI Common Lisp standard, and offers many extensions.
+ It runs on all desktop operating systems (GNU and Unix systems, macOS,
+ Windows) and is particularly memory-efficient.
+ .
+ This package contains the documentation for CLISP.
+
+Package: clisp-module-berkeley-db
+Architecture: any
+Depends: ${shlibs:Depends}, clisp (= ${binary:Version}), ${misc:Depends}
+Enhances: clisp
+Description: GNU CLISP module that adds an interface to Berkeley DB
+ GNU CLISP is a Common Lisp implementation.
+ It conforms to the ANSI Common Lisp standard, and offers many extensions.
+ It runs on all desktop operating systems (GNU and Unix systems, macOS,
+ Windows) and is particularly memory-efficient.
+ .
+ This package adds a module to CLISP that implements an interface to the
+ Berkeley DB.
+
+Package: clisp-module-pcre
+Architecture: any
+Depends: ${shlibs:Depends}, clisp (= ${binary:Version}), ${misc:Depends}
+Enhances: clisp
+Description: GNU CLISP module that adds libpcre support
+ GNU CLISP is a Common Lisp implementation.
+ It conforms to the ANSI Common Lisp standard, and offers many extensions.
+ It runs on all desktop operating systems (GNU and Unix systems, macOS,
+ Windows) and is particularly memory-efficient.
+ .
+ This adds a module to CLISP that implements an interface to the
+ libpcre which implements Perl-compatible regular expressions.
+
+Package: clisp-module-postgresql
+Architecture: any
+Depends: ${shlibs:Depends}, clisp (= ${binary:Version}), ${misc:Depends}
+Enhances: clisp
+Description: GNU CLISP module that adds a PostgreSQL interface
+ GNU CLISP is a Common Lisp implementation.
+ It conforms to the ANSI Common Lisp standard, and offers many extensions.
+ It runs on all desktop operating systems (GNU and Unix systems, macOS,
+ Windows) and is particularly memory-efficient.
+ .
+ This adds a module to CLISP that implements an interface to the
+ PostgreSQL DB using the C bindings.
+
+Package: clisp-module-clx
+Architecture: any
+Depends: ${shlibs:Depends}, clisp (= ${binary:Version}), ${misc:Depends}
+Enhances: clisp
+Description: GNU CLISP module that adds X11 bindings
+ GNU CLISP is a Common Lisp implementation.
+ It conforms to the ANSI Common Lisp standard, and offers many extensions.
+ It runs on all desktop operating systems (GNU and Unix systems, macOS,
+ Windows) and is particularly memory-efficient.
+ .
+ This adds a module to CLISP that implements an interface to the
+ X11 called CLX.
+
+Package: clisp-module-dbus
+Architecture: any
+Depends: ${shlibs:Depends}, clisp (= ${binary:Version}), ${misc:Depends}
+Enhances: clisp
+Description: GNU CLISP module that adds an interface to D-Bus
+ GNU CLISP is a Common Lisp implementation.
+ It conforms to the ANSI Common Lisp standard, and offers many extensions.
+ It runs on all desktop operating systems (GNU and Unix systems, macOS,
+ Windows) and is particularly memory-efficient.
+ .
+ This adds a module to CLISP that implements an interface to the
+ D-Bus system.
+
+Package: clisp-module-gdbm
+Architecture: any
+Depends: ${shlibs:Depends}, clisp (= ${binary:Version}), ${misc:Depends}
+Enhances: clisp
+Description: GNU CLISP module that adds an interface to GNU DBM
+ GNU CLISP is a Common Lisp implementation.
+ It conforms to the ANSI Common Lisp standard, and offers many extensions.
+ It runs on all desktop operating systems (GNU and Unix systems, macOS,
+ Windows) and is particularly memory-efficient.
+ .
+ This adds a module to CLISP that implements an interface to
+ GNU DBM.
+
+Package: clisp-module-zlib
+Architecture: any
+Depends: ${shlibs:Depends}, clisp (= ${binary:Version}), ${misc:Depends}
+Enhances: clisp
+Description: GNU CLISP module that adds zlib support for vectors
+ GNU CLISP is a Common Lisp implementation.
+ It conforms to the ANSI Common Lisp standard, and offers many extensions.
+ It runs on all desktop operating systems (GNU and Unix systems, macOS,
+ Windows) and is particularly memory-efficient.
+ .
+ This adds a module to CLISP that implements a zlib interface,
+ allowing you to compress vectors using zlib.
+
+Package: clisp-module-fastcgi
+Architecture: any
+Depends: ${shlibs:Depends}, clisp (= ${binary:Version}), ${misc:Depends}
+Enhances: clisp
+Description: GNU CLISP module that adds an interface to FastCGI
+ GNU CLISP is a Common Lisp implementation.
+ It conforms to the ANSI Common Lisp standard, and offers many extensions.
+ It runs on all desktop operating systems (GNU and Unix systems, macOS,
+ Windows) and is particularly memory-efficient.
+ .
+ This adds a module to CLISP that implements an interface to FastCGI.
+
+Package: clisp-module-libsvm
+Architecture: any
+Depends: ${shlibs:Depends}, clisp (= ${binary:Version}), ${misc:Depends}
+Enhances: clisp
+Description: GNU CLISP module that adds an interface to LIBSVM
+ GNU CLISP is a Common Lisp implementation.
+ It conforms to the ANSI Common Lisp standard, and offers many extensions.
+ It runs on all desktop operating systems (GNU and Unix systems, macOS,
+ Windows) and is particularly memory-efficient.
+ .
+ This adds a module to CLISP that implements an interface to the LIBSVM
+ library for support vector classification.
+
+Package: clisp-module-pari
+Architecture: any
+Depends: ${shlibs:Depends}, clisp (= ${binary:Version}), ${misc:Depends}
+Enhances: clisp
+Description: GNU CLISP module that adds an interface to PARI
+ GNU CLISP is a Common Lisp implementation.
+ It conforms to the ANSI Common Lisp standard, and offers many extensions.
+ It runs on all desktop operating systems (GNU and Unix systems, macOS,
+ Windows) and is particularly memory-efficient.
+ .
+ This adds a module to CLISP that implements an interface to the PARI
+ computer algebra system.

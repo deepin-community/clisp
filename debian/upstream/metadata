@@ -1,0 +1,8 @@
+Repository: https://gitlab.com/gnu-clisp/clisp.git
+Repository-Browse: https://gitlab.com/gnu-clisp/clisp
+Bug-Database: https://sourceforge.net/p/clisp/bugs/
+              https://gitlab.com/gnu-clisp/clisp/-/issues
+Bug-Submit: https://sourceforge.net/p/clisp/bugs/new/
+FAQ: https://clisp.sourceforge.io/impnotes/faq.html
+Changelog: https://gitlab.com/gnu-clisp/clisp/-/raw/master/src/ChangeLog
+Documentation: https://www.gnu.org/software/clisp/impnotes/

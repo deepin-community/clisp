@@ -1,0 +1,3 @@
+usr/lib/clisp-*/dynmod/lib-fastcgi.so
+usr/lib/clisp-*/dynmod/fastcgi.lisp
+usr/lib/clisp-*/fastcgi

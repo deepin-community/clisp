@@ -1,0 +1,81 @@
+Description: Tweak configuration for better Debian integration
+ – use “editor” as default editor (if the EDITOR variable is not set), per
+   policy §11.4.
+ – use “sensible-browser” as default browser (comes along with a Depends of
+   clisp on sensible-utils).
+ — if the hyperspec package is installed, use the local CLHS when
+   (documentation <foo> 'sys::clhs) is invoked. This requires a modification of
+   clhs.lisp, so as to detect the right HyperSpec format.
+ — if the clisp-doc package is installed, use the locally installed
+   implementation notes when (documentation <foo> 'sys::impnotes) is invoked.
+ .
+ N.B.: The src/cfgunix.lisp file is used as a template for the creation of
+       config.lisp during the build process.
+Author: Sébastien Villemot <sebastien@debian.org>
+Bug-Debian: https://bugs.debian.org/963776
+Forwarded: not-needed
+Last-Update: 2021-08-29
+---
+This patch header follows DEP-3: http://dep.debian.net/deps/dep3/
+--- a/src/cfgunix.lisp
++++ b/src/cfgunix.lisp
+@@ -21,7 +21,7 @@
+                 (with-open-stream (s (make-pipe-input-stream "uname -a"))
+                   (read-line s)))))))
+ 
+-(defparameter *editor* "vi" "The name of the editor.")
++(defparameter *editor* "editor" "The name of the editor.")
+ (defun editor-name () (or (getenv "EDITOR") *editor*))
+ 
+ (defun edit-file (file)
+@@ -46,14 +46,17 @@
+ (setq *parse-namestring-dot-file* :name)
+ 
+ ;; which browser do you use? (see `*browsers*' in clhs.lisp)
+-;; (setq *browser* :firefox)
++(setq *browser* :sensible-browser)
+ 
+ (defvar *impnotes-root-default* "http://clisp.org/impnotes/")
+ (defun impnotes-root ()
+   "This returns the root URL for the CLISP implementation notes.
+ You can set the environment variable `IMPNOTES' or redefine this function
+ in ~/.clisprc.  On win32 you can also use the Registry."
+-  (or (getenv "IMPNOTES") *impnotes-root-default*))
++  (or (getenv "IMPNOTES")
++      (and (probe-file #p"/usr/share/doc/clisp/doc/impnotes.html")
++           "file:///usr/share/doc/clisp/doc/impnotes.html")
++      *impnotes-root-default*))
+ 
+ ;; Common Lisp HyperSpec access
+ (defvar *clhs-root-default*)
+@@ -61,4 +64,7 @@ in ~/.clisprc.  On win32 you can also us
+   "This returns the root URL for the Common Lisp HyperSpec.
+ You can set the environment variable `CLHSROOT' or redefine this function
+ in ~/.clisprc.  On win32 you can also use the Registry."
+-  (or (getenv "CLHSROOT") *clhs-root-default*))
++  (or (getenv "CLHSROOT")
++      (and (probe-file #p"/usr/share/doc/hyperspec/Data/Map_Sym.txt")
++           "file:///usr/share/doc/hyperspec/")
++      *clhs-root-default*))
+--- a/src/clhs.lisp
++++ b/src/clhs.lisp
+@@ -36,7 +36,8 @@
+     (:chromium "chromium-browser" "~a")
+     (:conkeror "conkeror" "~a")
+     (:opera "opera" "~a")
+-    (:emacs "emacsclient" "--eval" "(browse-url ~s)"))
++    (:emacs "emacsclient" "--eval" "(browse-url ~s)")
++    (:sensible-browser "sensible-browser" "~a"))
+   "Alist of browsers and commands that invoke them.
+ `~a' will be replaced with the URL to view.")
+ (defvar *browser* nil
+@@ -284,7 +285,8 @@ set *HTTP-PROXY*, and return it; otherwi
+                                     (get-map-1996))
+                                    ((or (search "maclisp.org/" clhs-root)
+                                         (search "lispworks.com/" clhs-root)
+-                                        (search "lisp.se/" clhs-root))
++                                        (search "lisp.se/" clhs-root)
++                                        (search "/usr/share/doc/hyperspec/" clhs-root))
+                                     (get-map-2001))
+                                    (t (or (get-map-1996) (get-map-2001)))))
+           (unless s

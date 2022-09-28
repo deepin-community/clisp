@@ -1,0 +1,3 @@
+usr/lib/clisp-*/dbus
+usr/lib/clisp-*/dynmod/dbus.lisp
+usr/lib/clisp-*/dynmod/lib-dbus.so

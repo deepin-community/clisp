@@ -1,0 +1,3 @@
+usr/lib/clisp-*/clx
+usr/lib/clisp-*/dynmod/clx.lisp
+usr/lib/clisp-*/dynmod/lib-clx.so

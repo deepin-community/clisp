@@ -1,0 +1,485 @@
+# German messages for CLISP
+# Copyright (C) 2004 Free Software Foundation, Inc.
+# Copyright (C) 1992-2004 Bruno Haible, Michael Stoll
+# Bruno Haible <bruno@clisp.org>, 2000, 2004.
+# Bruno Haible <haible@clisp.cons.org>, 2000.
+# Bruno Haible <bruno@clisp.org>, 2004.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: de\n"
+"Report-Msgid-Bugs-To: clisp-devel@lists.sourceforge.net\n"
+"POT-Creation-Date: 2017-06-25 11:29:03+0200\n"
+"PO-Revision-Date: 2004-04-12 00:45+0200\n"
+"Last-Translator: Bruno Haible <bruno@clisp.org>\n"
+"Language-Team: Deutsch <de@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=ISO-8859-1\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: KBabel 1.0.2\n"
+
+#: spvw.d:909
+msgid "*** - Program stack overflow. RESET"
+msgstr "*** - Programmstack-Überlauf: RESET"
+
+#: spvw.d:924
+msgid "*** - Lisp stack overflow. RESET"
+msgstr "*** - LISP-Stack-Überlauf: RESET"
+
+#: spvw.d:1190
+msgid "Unknown FSUBR signature: %d %d %d\n"
+msgstr "Unbekanntes FSUBR-Parameterprofil: %d %d %d\n"
+
+#: spvw.d:1298
+msgid "Unknown SUBR signature: %d %d %d %d"
+msgstr "Unbekanntes SUBR-Parameterprofil: %d %d %d %d"
+
+#: spvw.d:2022
+#, fuzzy
+msgid "module '%s' requires package %s.\n"
+msgstr "Modul `%s' benötigt Package %s.\n"
+
+#: spvw.d:2032
+#, fuzzy
+msgid "module '%s' redefines symbol "
+msgstr "Modul `%s' benötigt Package %s.\n"
+
+#: spvw.d:2034
+#, fuzzy
+msgid " in the locked package "
+msgstr "eine gelöschte Package."
+
+#: spvw.d:2036
+#, fuzzy
+msgid ""
+"\n"
+"old definition: "
+msgstr "Die alte Definition wird weggeworfen."
+
+#: spvw.d:2073
+#, fuzzy
+msgid "is an ANSI Common Lisp implementation."
+msgstr "ist ein ANSI Common Lisp."
+
+#: spvw.d:2075
+msgid ""
+"This image does not process the usual command line arguments.\n"
+"To create a normal image \"myclisp\", please do\n"
+"%s --clisp-x '(ext:saveinitmem \"myclisp\" :executable t :init-function nil)'\n"
+msgstr ""
+
+#: spvw.d:2080
+#, fuzzy
+msgid ""
+"Usage:  %s [options] [lispfile [argument ...]]\n"
+" When 'lispfile' is given, it is loaded and '*ARGS*' is set\n"
+" to the list of argument strings. Otherwise, an interactive\n"
+" read-eval-print loop is entered.\n"
+msgstr ""
+"[Optionen] [Lisp-Datei [Argument ...]]\n"
+"Wenn eine Lisp-Datei angegeben ist, wird sie geladen und `*ARGS' auf die\n"
+"Liste der Argument-Strings gesetzt. Andernfalls wird eine interaktive\n"
+"Read-Eval-Print-Schleife gestartet.\n"
+
+#: spvw.d:2084
+#, fuzzy
+msgid "Informative output:"
+msgstr "Informative Ausgabe:\n"
+
+#: spvw.d:2085
+#, fuzzy
+msgid " -h, --help    - print this help and exit"
+msgstr " -h, --help      Diese Hilfe anzeigen und beenden.\n"
+
+#: spvw.d:2086
+#, fuzzy
+msgid " --version     - print the version information"
+msgstr " --version       Versionsinformation anzeigen.\n"
+
+#: spvw.d:2087
+#, fuzzy
+msgid " --license     - print the licensing information"
+msgstr " --license       Lizenz-Information anzeigen.\n"
+
+#: spvw.d:2088
+#, fuzzy
+msgid " -help-image   - print image-specific help and exit"
+msgstr " -h, --help      Diese Hilfe anzeigen und beenden.\n"
+
+#: spvw.d:2089
+#, fuzzy
+msgid "Memory image selection:"
+msgstr "Auswahl des Speicherabbilds:\n"
+
+#: spvw.d:2090
+#, fuzzy
+msgid " -B lisplibdir - set the installation directory"
+msgstr " -B LispBibVerz  Setzt das Installations-Verzeichnis.\n"
+
+#: spvw.d:2092
+#, fuzzy
+msgid " -K linkingset - use this executable and memory image"
+msgstr " -K Bausatz      Benutze dieses ausführbare Programm und dieses Speicherabbild.\n"
+
+#: spvw.d:2094
+#, fuzzy
+msgid " -M memfile    - use this memory image"
+msgstr " -M SpAbbild     Benutze dieses Speicherabbild.\n"
+
+#: spvw.d:2095
+#, fuzzy
+msgid " -m size       - memory size (size = nB or nKB or nMB)"
+msgstr " -m Größe        Setze Speichergröße (= xxxxxxxB oder xxxxKB oder xMB)\n"
+
+#: spvw.d:2096
+#, fuzzy
+msgid "Internationalization:"
+msgstr "Internationalisierung:\n"
+
+#: spvw.d:2097
+#, fuzzy
+msgid " -L language   - set user language"
+msgstr " -L Sprache      Setzt Sprache des Benutzers\n"
+
+#: spvw.d:2098
+#, fuzzy
+msgid " -N nlsdir     - NLS catalog directory"
+msgstr " -N MSUVerz      Setzte Verzeichnis der Kataloge (Muttersprachen-Übersetzung)\n"
+
+#: spvw.d:2099
+#, fuzzy
+msgid " -Edomain encoding - set encoding"
+msgstr " -EBereich Kodierung  Setzt eine Kodierung\n"
+
+#: spvw.d:2100
+#, fuzzy
+msgid "Interoperability:"
+msgstr "Interoperabilität:\n"
+
+#: spvw.d:2101
+#, fuzzy
+msgid ""
+" -q, --quiet, --silent, -v, --verbose - verbosity level:\n"
+"     affects banner, *LOAD-VERBOSE*/*COMPILE-VERBOSE*,\n"
+"     and *LOAD-PRINT*/*COMPILE-PRINT*"
+msgstr ""
+" -q, --quiet, --silent, -v, --verbose   Geschwätzigkeit:\n"
+"                 beeinflusst die Flagge, *LOAD-VERBOSE*/*COMPILE-VERBOSE*,\n"
+"                 und *LOAD-PRINT*/*COMPILE-PRINT*.\n"
+
+#: spvw.d:2104
+#, fuzzy
+msgid " -w            - wait for a keypress after program termination"
+msgstr " -w              Warte auf Tastendruck, nachdem das Programm beendet ist.\n"
+
+#: spvw.d:2105
+#, fuzzy
+msgid " -I            - be ILISP-friendly"
+msgstr " -I              Sei nett zu ILISP.\n"
+
+#: spvw.d:2106
+msgid " -disable-readline - do not use the gnu readline library"
+msgstr ""
+
+#: spvw.d:2107
+#, fuzzy
+msgid "Startup actions:"
+msgstr "Aktionen bei Programmstart:\n"
+
+#: spvw.d:2108
+#, fuzzy
+msgid " -ansi         - more ANSI CL compliance"
+msgstr " -ansi           Mehr ANSI CL Gehorsam.\n"
+
+#: spvw.d:2109
+#, fuzzy
+msgid " -traditional  - traditional (undoes -ansi)"
+msgstr " -traditional    Traditioneller Gehorsam (Gegenteil von -ansi).\n"
+
+#: spvw.d:2110
+msgid " -modern       - start in a case-sensitive lowercase-preferring package"
+msgstr ""
+
+#: spvw.d:2111
+#, fuzzy
+msgid " -p package    - start in the package"
+msgstr " -p Paket        Im gegebenen Paket loslegen.\n"
+
+#: spvw.d:2112
+#, fuzzy
+msgid " -C            - set *LOAD-COMPILING* to T"
+msgstr " -C              Setze *LOAD-COMPILING* auf T.\n"
+
+#: spvw.d:2113
+#, fuzzy
+msgid " -norc         - do not load the user ~/.clisprc file"
+msgstr " -norc           Lade das ~/.clisprc des Benutzers nicht.\n"
+
+#: spvw.d:2114
+#, fuzzy
+msgid " -lp dir       - add dir to *LOAD-PATHS* (can be repeated)"
+msgstr " -i Datei        Lade Datei zur Initialisierung. (Mehrfach angebbar.)\n"
+
+#: spvw.d:2115
+#, fuzzy
+msgid " -i file       - load initfile (can be repeated)"
+msgstr " -i Datei        Lade Datei zur Initialisierung. (Mehrfach angebbar.)\n"
+
+#: spvw.d:2116
+#, fuzzy
+msgid "Actions:"
+msgstr "Aktionen:\n"
+
+#: spvw.d:2117
+#, fuzzy
+msgid " -c [-l] lispfile [-o outputfile] - compile lispfile"
+msgstr " -c [-l] LispDatei [-o AusgabeDatei]   Kompiliere LispDatei.\n"
+
+#: spvw.d:2118
+#, fuzzy
+msgid " -x expressions - execute the expressions, then exit"
+msgstr " -x Ausdrücke    Führe die Ausdrücke aus, und beende dann.\n"
+
+#: spvw.d:2119
+msgid " Depending on the image, positional arguments can mean:"
+msgstr ""
+
+#: spvw.d:2120
+#, fuzzy
+msgid "   lispscript [argument ...] - load script, then exit"
+msgstr " LispDatei [Argument ...]  Lade LispDatei, und beende dann.\n"
+
+#: spvw.d:2121
+msgid "   [argument ...]            - run the init-function"
+msgstr ""
+
+#: spvw.d:2122
+msgid "  arguments are placed in EXT:*ARGS* as strings."
+msgstr ""
+
+#: spvw.d:2123
+#, fuzzy
+msgid "These actions put CLISP into a batch mode, which is overridden by"
+msgstr ""
+"Diese Aktionen versetzen CLISP in die Betriebsart selbständiger Ausführung\n"
+"(keine Kontrolle durch den Benutzer). Sie kann außer Kraft gesetzt werden\n"
+"durch:\n"
+
+#: spvw.d:2124
+msgid " -on-error action - action can be one of debug, exit, abort, appease"
+msgstr ""
+
+#: spvw.d:2125
+#, fuzzy
+msgid " -repl            - enter the interactive read-eval-print loop when done"
+msgstr " -repl           Startet zum Schluss eine interaktive Read-Eval-Print-Schleife.\n"
+
+#: spvw.d:2126
+#, fuzzy
+msgid "Default action is an interactive read-eval-print loop."
+msgstr "Die normale Aktion ist eine interaktive Read-Eval-Print-Schleife.\n"
+
+#: spvw.d:2135
+msgid "%s: use '-h' for help"
+msgstr ""
+
+#: spvw.d:2139
+#, fuzzy
+msgid "invalid argument"
+msgstr "Ungültiger Parameter"
+
+#: spvw.d:2450
+msgid "Syntax for %s: nnnnnnn or nnnnKB or nMB"
+msgstr "Syntax für %s: nnnnnnn oder nnnnKB oder nMB"
+
+#: spvw.d:2456
+msgid "warning: %s %lu too small, using %lu instead"
+msgstr ""
+
+#: spvw.d:2462
+msgid "warning: %s %lu too large, using %lu instead"
+msgstr ""
+
+#: spvw.d:2618
+msgid "memory size"
+msgstr "Speichervorrat"
+
+#: spvw.d:2644
+msgid "multiple -B"
+msgstr ""
+
+#: spvw.d:2652
+#, fuzzy
+msgid "This option requires an argument"
+msgstr " notwendige Argumente"
+
+#: spvw.d:2689
+#, fuzzy
+msgid "-E requires an argument"
+msgstr " notwendige Argumente"
+
+#: spvw.d:2924
+msgid "-l without -c is invalid"
+msgstr ""
+
+#: spvw.d:2930
+#, fuzzy
+msgid "-x with -c is invalid"
+msgstr "~S auf ~S ist unzulässig."
+
+#: spvw.d:2935
+msgid "-x with lisp-file is invalid"
+msgstr ""
+
+#: spvw.d:3079
+#, fuzzy
+msgid "Return value of malloc() = %lx is not compatible with type code distribution."
+msgstr "Ergebnis von malloc() = %lx ist nicht mit der Typcodeverteilung kompatibel."
+
+#: spvw.d:3086
+#, fuzzy
+msgid "Only %ld bytes available."
+msgstr "Nur %d Bytes verfügbar."
+
+#: spvw.d:3321
+msgid "Could not determine the end of the SP stack!"
+msgstr "Konnte das Ende des SP-Stacks nicht herausfinden!"
+
+#: spvw.d:4060
+msgid "%s: Not enough memory for Lisp."
+msgstr "%s: Nicht genug Speicher für Lisp."
+
+#: spvw_alloca.d:48
+msgid "*** - Virtual memory exhausted. RESET"
+msgstr "*** - Kein virtueller Speicher mehr verfügbar: RESET"
+
+#: spvw_alloca.d:50
+msgid "*** - Memory exhausted. RESET"
+msgstr "*** - Speicher voll: RESET"
+
+#: spvw_mmap.d:105
+msgid "Warning: overwriting existing memory mappings in the address range 0x%lx...0x%lx. clisp will likely crash soon!!\n"
+msgstr ""
+
+#: spvw_mmap.d:161
+msgid "Warning: reserving address range 0x%lx...0x%lx that contains memory mappings. clisp might crash later!\n"
+msgstr ""
+
+#: spvw_mmap.d:203 spvw_mmap.d:323 spvw_mmap.d:496
+#, fuzzy
+msgid "Cannot map memory to address 0x%lx ."
+msgstr "Kann keinen Speicher an Adresse 0x%lx legen."
+
+#: spvw_mmap.d:296
+#, fuzzy
+msgid "Cannot reserve address range at 0x%lx ."
+msgstr "Kann Adressbereich ab 0x%lx nicht reservieren."
+
+#: spvw_mmap.d:306
+#, fuzzy
+msgid "Cannot reserve address range 0x%lx-0x%lx ."
+msgstr "Kann Adressbereich 0x%lx-0x%lx nicht reservieren."
+
+#: spvw_mmap.d:350
+msgid "CreateFileMapping() failed."
+msgstr "CreateFileMapping() scheiterte."
+
+#: spvw_mmap.d:358
+msgid "MapViewOfFileEx(addr=0x%x,off=0x%x) failed."
+msgstr "MapViewOfFileEx(addr=0x%x,off=0x%x) scheiterte."
+
+#: spvw_mmap.d:364
+msgid "MapViewOfFileEx() returned 0x%x instead of 0x%x."
+msgstr "MapViewOfFileEx() lieferte 0x%x statt 0x%x."
+
+#: spvw_mmap.d:379
+msgid "VirtualFree() failed."
+msgstr "VirtualFree() scheiterte."
+
+#: spvw_mmap.d:393
+msgid "VirtualProtect() failed."
+msgstr "VirtualProtect() scheiterte."
+
+#: spvw_mmap.d:460
+msgid "Cannot open <%s>."
+msgstr "Kann %s nicht öffnen."
+
+#: spvw_fault.d:285
+#, fuzzy
+msgid "mprotect(0x%lx,%d,%d) failed."
+msgstr "mprotect(0x%lx,%d,%d) scheitert."
+
+#: spvw_sigsegv.d:25
+msgid "GC count: %lu"
+msgstr ""
+
+#: spvw_sigsegv.d:27
+msgid "Space collected by GC:"
+msgstr ""
+
+#: spvw_sigsegv.d:41
+msgid "Run time:"
+msgstr ""
+
+#: spvw_sigsegv.d:43
+msgid "Real time:"
+msgstr ""
+
+#: spvw_sigsegv.d:45
+msgid "GC time:"
+msgstr ""
+
+#: spvw_sigsegv.d:48
+msgid "Permanently allocated: %lu bytes."
+msgstr ""
+
+#: spvw_sigsegv.d:51
+msgid "Currently in use: %lu bytes."
+msgstr ""
+
+#: spvw_sigsegv.d:54
+msgid "Free space: %lu bytes."
+msgstr ""
+
+#: spvw_sigsegv.d:65
+#, fuzzy
+msgid "SIGSEGV cannot be cured. Fault address = 0x%lx."
+msgstr "SIGSEGV kann nicht behoben werden. Fehler-Adresse = 0x%lx."
+
+#: spvw_sigsegv.d:180
+msgid "Apollo 13 scenario: Stack overflow handling failed. On the next stack overflow we will crash!!!"
+msgstr "Szenario Apollo 13: Stack-Überlauf-Behandlung ging schief. Beim nächsten Stack-Überlauf kracht's!!!"
+
+#: spvw_garcol.d:2563 spvw_garcol_old.d:1981
+msgid "munmap() failed."
+msgstr "munmap() klappt nicht."
+
+#: spvw_allocate.d:103
+msgid "*** - No more room for LISP objects: RESET"
+msgstr "*** - Speicherplatz für LISP-Objekte ist voll: RESET"
+
+#: spvw_allocate.d:314 spvw_allocate.d:373 spvw_allocate.d:456
+msgid "Trying to make room through a GC..."
+msgstr "Versuche, durch eine GC Platz zu schaffen..."
+
+#: spvw_memfile.d:991 spvw_memfile.d:1847
+msgid "%s: operating system error during load of initialization file `%s'"
+msgstr "%s: Betriebssystem-Fehler beim Versuch, die Initialisierungs-Datei »%s« zu laden."
+
+#: spvw_memfile.d:1512
+msgid "%s: Cannot map the initialization file `%s' into memory."
+msgstr "%s: Kann die Initialisierungs-Datei »%s« nicht in den Speicher legen."
+
+#: spvw_memfile.d:1852
+#, fuzzy
+msgid "%s: initialization file `%s' was not created by this version of CLISP runtime"
+msgstr "%s: Initialisierungs-Datei »%s« wurde nicht von dieser Lisp-Version erzeugt."
+
+#: spvw_memfile.d:1856
+msgid "%s: not enough memory for initialization"
+msgstr "%s: Speicherplatz reicht für die Initialisierung nicht aus."
+
+#: spvw_memfile.d:1906
+msgid "%s: 'image size' method failed, but found image header at %d\n"
+msgstr ""

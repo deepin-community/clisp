@@ -1,0 +1,3 @@
+usr/lib/clisp-*/berkeley-db
+usr/lib/clisp-*/dynmod/bdb.lisp
+usr/lib/clisp-*/dynmod/lib-bdb.so

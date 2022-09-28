@@ -1,0 +1,442 @@
+Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Upstream-Name: CLISP
+Upstream-Contact: clisp-devel@lists.sourceforge.net
+Source: http://clisp.org/
+
+Files: *
+Copyright: 1992-2021 Bruno Haible, Michael Stoll, Sam Steingold
+           1990-2021 Free Software Foundation, Inc.
+           2002-2003, Alma Mater Software, Inc.
+           2007, Masayuki Onjo <onjo@lispuser.net>
+           1992-2017 Michael Stoll
+           1992-2017 Marcus Daniels
+           2004, Scott James Remnant <scott@netsplit.com>
+           1996-1999 Gilbert Baumann
+           2005, 2010, Arseny Slobodyuk
+           2007-2008, Yann Nicolas Dauphin
+           2016-2017, Bruno Handle
+           2007, Elliott Slaughter
+           2004, Joerg Hoehle
+           2003, Kaz Kylheku <kaz@ashi.footprints.net>
+           1994, 1997, P.J.Burwood
+License: GPL-2+
+
+Files: benchmarks/bfib.lisp
+Copyright: 1992 George Carrette
+License: LGPL-2.1+
+Comment:
+ I inferred the LGPL-2.1+ license because the file says “as described in
+ SLIB.C”. The latter file comes from the SIOD project, by the same
+ copyright owner, which is under LGPL-2.1+. See:
+ http://people.delphiforums.com/gjc/siod.html
+
+Files: sacla-tests/*
+Copyright: 2002-2004, Yuji Minejima <ggb01164@nifty.ne.jp>
+License: BSD-2-clause
+ Redistribution and use in source and binary forms, with or without
+ modification, are permitted provided that the following conditions
+ are met:
+ .
+  * Redistributions of source code must retain the above copyright
+    notice, this list of conditions and the following disclaimer.
+  * Redistributions in binary form must reproduce the above copyright
+    notice, this list of conditions and the following disclaimer in
+    the documentation and/or other materials provided with the
+    distribution.
+ .
+ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+ A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+ OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+ THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+Files: src/build-aux/config.rpath
+       src/glm4/*
+       src/m4/ltoptions.m4
+       src/m4/ltsugar.m4
+       src/m4/lt~obsolete.m4
+       src/m4/floatparam.m4
+       src/m4/intparam.m4
+       src/m4/ltversion.m4
+Copyright: 1992-2021, Free Software Foundation, Inc.
+License: FSFULLR
+ This file is free software; the Free Software Foundation
+ gives unlimited permission to copy and/or distribute it,
+ with or without modifications, as long as this notice is preserved.
+
+Files: src/gllib/*
+Copyright: 1990-2021, Free Software Foundation, Inc.
+License: LGPL-2.1+
+
+Files: src/build-aux/arg-nonnull.h
+       src/build-aux/c++defs.h
+       src/build-aux/warn-on-use.h
+       src/glm4/std-gnu11.m4
+       src/gllib/c-strtod.c
+       src/gllib/c-strtod.h
+       src/gllib/getloadavg.c
+       src/gllib/vma-iter.c
+       src/gllib/vma-iter.h
+Copyright: 1985-2021, Free Software Foundation, Inc.
+License: GPL-3+
+
+Files: src/gllib/inet_ntop.c
+       src/gllib/inet_pton.c
+Copyright: 2005-2006, 2008-2021 Free Software Foundation, Inc.
+           1996-1999 Internet Software Consortium.
+License: LGPL-2.1+ and ISC
+
+Files: src/gllib/_Noreturn.h
+       src/gllib/arg-nonnull.h
+       src/gllib/c++defs.h
+       src/gllib/unused-parameter.h
+       src/gllib/warn-on-use.h
+Copyright: 2008-2021, Free Software Foundation, Inc.
+License: LGPL-2+
+
+Files: src/gllib/libunistring.valgrind
+       src/gllib/uniname.in.h
+Copyright: 2010-2021 Free Software Foundation, Inc.
+License: LGPL-3+ or GPL-2+
+
+Files: src/gllib/mkfifo.c
+       src/gllib/mknod.c
+       src/gllib/nstrftime.c
+       src/gllib/strftime.h
+       src/gllib/strtod.c
+       src/gllib/time-internal.h
+       src/gllib/time_rz.c
+       src/gllib/tzset.c
+       src/gllib/uniname/gen-uninames.lisp
+       src/gllib/uniname/uniname.c
+       src/gllib/uniname/uninames.h
+Copyright: 1991-2021 Free Software Foundation, Inc.
+License: LGPL-3+
+
+Files: src/m4/address.m4
+       src/m4/as-underscore.m4
+       src/m4/bold.m4
+       src/m4/builtin_strlen.m4
+       src/m4/c++.m4
+       src/m4/cc-ema.m4
+       src/m4/cc-gcc.m4
+       src/m4/clisp.m4
+       src/m4/dynload.m4
+       src/m4/fenv_default.m4
+       src/m4/filecharset.m4
+       src/m4/general.m4
+       src/m4/gethostbyname.m4
+       src/m4/ioctl.m4
+       src/m4/libtool.m4
+       src/m4/ln.m4
+       src/m4/mach-vm.m4
+       src/m4/mmap.m4
+       src/m4/mprotect.m4
+       src/m4/munmap.m4
+       src/m4/param.m4
+       src/m4/pkg.m4
+       src/m4/poll.m4
+       src/m4/proto.m4
+       src/m4/readline.m4
+       src/m4/rusage.m4
+       src/m4/select.m4
+       src/m4/setjmp.m4
+       src/m4/siginterrupt.m4
+       src/m4/signal.m4
+       src/m4/socklen_t.m4
+       src/m4/tcpconn.m4
+       src/m4/termcap.m4
+       src/m4/termios.m4
+       src/m4/unixconn.m4
+       src/m4/vadvise.m4
+Copyright: 1993-2021, Free Software Foundation, Inc.
+           1999-2002, Ralf S. Engelschall <rse@engelschall.com>
+           2002-2008, 2010, 2017, Sam Steingold
+           2002-2008, 2010, 2017-2018, Bruno Haible
+License: GPL-2+ with Autoconf exception
+ This file is free software, distributed under the terms of the GNU
+ General Public License.  As a special exception to the GNU General
+ Public License, this file may be distributed as part of a program
+ that contains a configuration script generated by Autoconf, under
+ the same distribution terms as the rest of that program.
+ .
+ On Debian systems, the complete text of the GNU General Public
+ License, version 2, can be found in the file
+ `/usr/share/common-licenses/GPL-2'.
+
+Files: modules/clx/mit-clx/attributes.lisp
+       modules/clx/mit-clx/buffer.lisp
+       modules/clx/mit-clx/bufmac.lisp
+       modules/clx/mit-clx/clx.lisp
+       modules/clx/mit-clx/debug/debug.lisp
+       modules/clx/mit-clx/debug/describe.lisp
+       modules/clx/mit-clx/debug/keytrans.lisp
+       modules/clx/mit-clx/debug/trace.lisp
+       modules/clx/mit-clx/debug/util.lisp
+       modules/clx/mit-clx/demo/bezier.lisp
+       modules/clx/mit-clx/demo/beziertest.lisp
+       modules/clx/mit-clx/demo/menu.lisp
+       modules/clx/mit-clx/demo/zoid.lisp
+       modules/clx/mit-clx/dependent.lisp
+       modules/clx/mit-clx/describe.lisp
+       modules/clx/mit-clx/display.lisp
+       modules/clx/mit-clx/fonts.lisp
+       modules/clx/mit-clx/gcontext.lisp
+       modules/clx/mit-clx/graphics.lisp
+       modules/clx/mit-clx/image.lisp
+       modules/clx/mit-clx/input.lisp
+       modules/clx/mit-clx/keysyms.lisp
+       modules/clx/mit-clx/macros.lisp
+       modules/clx/mit-clx/manager.lisp
+       modules/clx/mit-clx/requests.lisp
+       modules/clx/mit-clx/resource.lisp
+       modules/clx/mit-clx/test/trapezoid.lisp
+       modules/clx/mit-clx/text.lisp
+       modules/clx/mit-clx/trace.lisp
+       modules/clx/mit-clx/translate.lisp
+       modules/clx/mit-clx/defsystem.lisp
+       modules/clx/mit-clx/doc.lisp
+       modules/clx/mit-clx/depdefs.lisp
+       modules/clx/new-clx/image.lisp
+       modules/clx/new-clx/resource.lisp
+       modules/clx/clx-manual.tar.gz
+Copyright: 1987-1988, Texas Instruments Incorporated.
+           1988-1989, Franz Inc, Berkeley, Ca.
+License: NTP
+
+Files: src/build-aux/install-sh
+       src/xthread.d
+Copyright: 1993-1994, X Consortium
+License: Expat
+
+Files: src/socket.d
+Copyright: 1989, Massachusetts Institute of Technology
+License: NTP
+
+Files: modules/asdf/asdf.lisp
+Copyright: 2001-2016, Daniel Barlow and contributors
+License: Expat
+
+Files: modules/gtk2/gtk.lisp
+Copyright: 2004, James Bailey (dgym.REMOVE_THIS.bailey@gmail.com)
+           2006-2009 Sam Steingold (sds@gnu.org)
+License: Expat and GPL-2+
+
+Files: modules/clx/new-clx/demos/recurrence.lisp
+Copyright: 1988, Michael O. Newton (newton@csvax.caltech.edu)
+           2007-2009 Sam Steingold <sds@gnu.org>
+License: NTP and GPL-2+
+
+Files: modules/clx/mit-clx/shape.lisp
+Copyright: 1999, Gilbert Baumann
+License: permissive-misc
+ Permission is granted to any individual or institution to use,
+ copy, modify, and distribute this software, provided that this
+ complete copyright and permission notice is maintained, intact, in
+ all copies and supporting documentation.
+ .
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
+Files: modules/clx/mit-clx/package.lisp
+Copyright: 1990, Massachusetts Institute of Technology, Cambridge,
+License: MIT-CMU
+ Permission to use, copy, modify, and distribute this software and its
+ documentation for any purpose and without fee is hereby granted, provided
+ that the above copyright notice appear in all copies and that both that
+ copyright notice and this permission notice appear in supporting
+ documentation, and that the name MIT not be used in advertising or
+ publicity pertaining to distribution of the software without specific,
+ written prior permission.
+
+Files: modules/clx/new-clx/demos/qix.lisp
+Copyright: none
+License: public-domain
+ Author: Gilbert Baumann <unk6@rz.uni-karlsruhe.de>
+ Copyright: None, since this code is not worth it.
+
+Files: doc/mop-spec.pdf
+       doc/mop.xml
+Copyright: 1991 MIT Press
+License: copyleft-amop
+ To this end, for Part II only (chapters 5 and 6), we grant permission to
+ prepare revisions or other derivative works including any amount of the
+ original text. We ask only that you properly acknowledge the source of the
+ original text and explicitly allow subsequent revisions and derivative works
+ under the same terms.
+Comment:
+ This corresponds to chapters 5 and 6 of “The Art of the Metaobject Protocol” by
+ Gregor Kiczales, Jim des Rivieres, and Daniel G. Bobrow.
+ .
+ The above license is written on page 6 of the PDF file.
+
+Files: doc/impnotes.*
+Copyright: 1992-2010 Bruno Haible
+           1998-2010 Sam Steingold
+License: GPL-2+ or GFDL-NIV-1.2+
+
+Files: debian/*
+Copyright: 1997-2000 Kevin Dalley <kevind@rahul.net>
+           2001-2002 Matt Zimmerman <mdz@debian.org>
+           2002 Gerhard Tonn <gt@debian.org>
+           2002 Francesco P. Lovergine <frankie@debian.org>
+           2002-2005 Will Newton <will@debian.ogr>
+           2003 Kevin M. Rosenberg <kmr@debian.org>
+           2005 Frank Lichtenheld <djpig@debian.org>
+           2005-2011, 2017 Peter Van Eynde <pvaneynd@debian.org>
+           2008 Luca Capello <luca@pca.it>
+           2008 Bastian Blank <waldi@debian.org>
+           2010 Alexander Reichle-Schmehl <tolimar@debian.org>
+           2010-2014 Christoph Egger <christoph@debian.org>
+           2013, 2017-2018 Peter Michael Green <plugwash@debian.org>
+           2012-2021 Sébastien Villemot <sebastien@debian.org>
+License: GPL-2+
+
+License: Expat
+ Permission is hereby granted, free of charge, to any person obtaining a copy
+ of this software and associated documentation files (the "Software"), to deal
+ in the Software without restriction, including without limitation the rights
+ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ copies of the Software, and to permit persons to whom the Software is
+ furnished to do so, subject to the following conditions:
+ .
+ The above copyright notice and this permission notice shall be included in
+ all copies or substantial portions of the Software.
+ .
+ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
+ X CONSORTIUM BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN
+ AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+License: GFDL-NIV-1.2+
+ Permission is granted to copy, distribute and/or modify this document
+ under the terms of the GNU Free Documentation License, Version 1.2 or
+ any later version published by the Free Software Foundation; with no
+ Invariant Sections, no Front-Cover Texts, and no Back-Cover Texts.
+ .
+ A copy of the license can be found at <http://www.gnu.org/licenses/fdl.txt>
+ .
+ On Debian systems, the complete text of the GNU Free Documentation
+ License, version 1.2, can be found in the file
+ `/usr/share/common-licenses/GFDL-1.2'.
+
+License: GPL-2+
+ This program is free software; you can redistribute it and/or
+ modify it under the terms of the GNU General Public License as
+ published by the Free Software Foundation; either version 2,
+ or (at your option) any later version.
+ .
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ .
+ You should have received a copy of the GNU General Public License along
+ with this program. If not, see <http://www.gnu.org/licenses/>.
+ .
+ On Debian systems, the complete text of the GNU General Public
+ License, version 2, can be found in the file
+ `/usr/share/common-licenses/GPL-2'.
+
+License: GPL-3+
+ This program is free software; you can redistribute it and/or
+ modify it under the terms of the GNU General Public License as
+ published by the Free Software Foundation; either version 3,
+ or (at your option) any later version.
+ .
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ .
+ You should have received a copy of the GNU General Public License along
+ with this program. If not, see <http://www.gnu.org/licenses/>.
+ .
+ On Debian systems, the complete text of the GNU General Public
+ License, version 3, can be found in the file
+ `/usr/share/common-licenses/GPL-3'.
+
+License: ISC
+ Permission to use, copy, modify, and distribute this software for any
+ purpose with or without fee is hereby granted, provided that the above
+ copyright notice and this permission notice appear in all copies.
+ .
+ THE SOFTWARE IS PROVIDED "AS IS" AND INTERNET SOFTWARE CONSORTIUM DISCLAIMS
+ ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES
+ OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL INTERNET SOFTWARE
+ CONSORTIUM BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL
+ DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR
+ PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS
+ ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS
+ SOFTWARE.
+
+License: LGPL-2+
+ This file is free software: you can redistribute it and/or modify
+ it under the terms of the GNU Library General Public License as
+ published by the Free Software Foundation; either version 2 of the
+ License, or (at your option) any later version.
+ .
+ This file is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU Library General Public License for more details.
+ .
+ You should have received a copy of the GNU Library General Public License
+ along with this program.  If not, see <https://www.gnu.org/licenses/>.  */
+ .
+ On Debian systems, the complete text of the GNU Library General Public
+ License, version 2, can be found in the file
+ `/usr/share/common-licenses/LGPL-2'.
+
+License: LGPL-2.1+
+ This program is free software; you can redistribute it and/or
+ modify it under the terms of the GNU Lesser General Public License as
+ published by the Free Software Foundation; either version 2.1,
+ or (at your option) any later version.
+ .
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ .
+ You should have received a copy of the GNU Lesser General Public License along
+ with this program. If not, see <http://www.gnu.org/licenses/>.
+ .
+ On Debian systems, the complete text of the GNU Lesser General Public
+ License, version 2.1, can be found in the file
+ `/usr/share/common-licenses/LGPL-2.1'.
+
+License: LGPL-3+
+ This program is free software; you can redistribute it and/or
+ modify it under the terms of the GNU Lesser General Public License as
+ published by the Free Software Foundation; either version 3,
+ or (at your option) any later version.
+ .
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ .
+ You should have received a copy of the GNU Lesser General Public License along
+ with this program. If not, see <http://www.gnu.org/licenses/>.
+ .
+ On Debian systems, the complete text of the GNU Lesser General Public
+ License, version 3, can be found in the file
+ `/usr/share/common-licenses/LGPL-3'.
+
+License: NTP
+ Permission is granted to any individual or institution to use, copy, modify,
+ and distribute this software, provided that this complete copyright and
+ permission notice is maintained, intact, in all copies and supporting
+ documentation.
+ .
+ The author provides this software "as is" without express or implied warranty.
