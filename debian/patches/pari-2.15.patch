@@ -1,0 +1,19 @@
+Description: Fix FTBFS against PARI 2.15.0
+Author: Bill Allombert <ballombe@debian.org>
+Bug-Debian: https://bugs.debian.org/1020437
+Forwarded: https://gitlab.com/gnu-clisp/clisp/-/merge_requests/5
+Last-Update: 2022-09-25
+---
+This patch header follows DEP-3: http://dep.debian.net/deps/dep3/
+--- a/modules/pari/pari.lisp
++++ b/modules/pari/pari.lisp
+@@ -218,8 +218,7 @@ t.e., this is the memory size for the re
+ ;; extern int factor_add_primes;
+ (def-c-var factor_add_primes (:type int))
+ 
+-;; extern ulong DEBUGFILES, DEBUGLEVEL, DEBUGMEM
+-(def-c-var debugfiles (:name "DEBUGFILES") (:type ulong))
++;; extern ulong DEBUGLEVEL, DEBUGMEM
+ (def-c-var debuglevel (:name "DEBUGLEVEL") (:type ulong))
+ (def-c-var debugmem (:name "DEBUGMEM") (:type ulong))
+ 
