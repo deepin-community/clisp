@@ -1,2 +1,2 @@
 # This is a loadable shared object, so it needs not be linked against libc
-clisp-module-postgresql: library-not-linked-against-libc usr/lib/clisp-*/dynmod/lib-postgresql.so
+clisp-module-postgresql: library-not-linked-against-libc [usr/lib/clisp-*/dynmod/lib-postgresql.so]
