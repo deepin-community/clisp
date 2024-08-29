@@ -1,3 +1,21 @@
+clisp (1:2.49.20210628.gitde01f0f-3.1) unstable; urgency=medium
+
+  * Non-maintainer upload.
+  * Drop clisp-module-pcre. (Closes: #1000089)
+
+ -- Bastian Germann <bage@debian.org>  Fri, 18 Aug 2023 16:39:51 +0000
+
+clisp (1:2.49.20210628.gitde01f0f-3) unstable; urgency=medium
+
+  * Team upload.
+  * pari-2.15.patch: new patch, fixes FTBFS against pari 2.15.0-2.
+    Thanks to Bill Allombert. (Closes: #1020437)
+  * Trim trailing whitespace.
+  * Update standards version to 4.6.1, no changes needed.
+  * Remove myself from Uploaders.
+
+ -- Sébastien Villemot <sebastien@debian.org>  Sun, 25 Sep 2022 11:46:30 +0200
+
 clisp (1:2.49.20210628.gitde01f0f-2) unstable; urgency=medium
 
   * Disable PIE when building for ppc64el and s390x as PIE executables get
@@ -166,7 +184,7 @@ clisp (1:2.49.20170913-2) unstable; urgency=medium
 
 clisp (1:2.49.20170913-1) unstable; urgency=medium
 
-  * Rebuild for new libffcall ABI. 
+  * Rebuild for new libffcall ABI.
   * Add missing missing build-{arch,indep} targets. Thanks for the patch to
     Santiago Vila. (Closes: #821973)
   * Make clisp-doc Multi-Arch: foreign
@@ -177,7 +195,7 @@ clisp (1:2.49.20170913-1) unstable; urgency=medium
 
 clisp (1:2.49.60+-2) unstable; urgency=medium
 
-  * Use '--enable-portability' as per advice of Bruno Haible. 
+  * Use '--enable-portability' as per advice of Bruno Haible.
     this should help with the buildd problems.
 
  -- Peter Van Eynde <pvaneynd@debian.org>  Fri, 30 Jun 2017 21:07:54 +0200
@@ -190,8 +208,8 @@ clisp (1:2.49.60+-1) unstable; urgency=medium
     * Import patch from Flavio Cruz for hurd, thanks! (Closes: #801260)
     * Remove all patches (apart from hurd/webbugs) for now. Will re-add as
       needed
-    * Drop wildcard package; dropped upstream 
-  * Use the new libsigsegv to build. 
+    * Drop wildcard package; dropped upstream
+  * Use the new libsigsegv to build.
 
  -- Peter Van Eynde <pvaneynd@debian.org>  Fri, 30 Jun 2017 09:47:30 +0200
 
@@ -216,7 +234,7 @@ clisp (1:2.49-8.2) unstable; urgency=low
 
   * Non-maintainer upload.
   * Add armhf to architecture lists
-  * Build with -marm on armhf  due to thumb incompatible code (specifically 
+  * Build with -marm on armhf  due to thumb incompatible code (specifically
     code that does not like odd function pointers)
   * apply patch from sourceforce to fix illegal instruction error on newer
     arm hardware caused by arm assembler (thanks to jerry james and tomfor)
@@ -264,15 +282,15 @@ clisp (1:2.49-5) unstable; urgency=low
 
 clisp (1:2.49-4) unstable; urgency=low
 
-  * Adapt package to broken new dh-lisp version. Autobuilders should now produce 
+  * Adapt package to broken new dh-lisp version. Autobuilders should now produce
     working packages again.
 
  -- Peter Van Eynde <pvaneynd@debian.org>  Thu, 17 Mar 2011 10:28:01 +0100
 
 clisp (1:2.49-3) unstable; urgency=low
 
-  * Declare a conflict between clisp and clisp-dev to catch overwriting 
-    clisp-link. Missed that during testing. (Closes: #614889) 
+  * Declare a conflict between clisp and clisp-dev to catch overwriting
+    clisp-link. Missed that during testing. (Closes: #614889)
 
  -- Peter Van Eynde <pvaneynd@debian.org>  Fri, 18 Feb 2011 05:44:09 +0100
 
@@ -280,7 +298,7 @@ clisp (1:2.49-2) unstable; urgency=low
 
   [ Peter Van Eynde ]
   * Updated debian/README.building with updated information
-  * 2.49 also fixes a bug related to store-value. (Closes: #607743) 
+  * 2.49 also fixes a bug related to store-value. (Closes: #607743)
   * Go with the flow and convert to use quilt
   * Building for release with branch debian-2.49-2
 
@@ -296,18 +314,18 @@ clisp (1:2.49-2) unstable; urgency=low
 clisp (1:2.49-1) experimental; urgency=low
 
   * Use libsigsegv 2.8 should fix a few issues. (Closes: 566686)
-  * conflict against libreadline6 as it would be illegal to link 
+  * conflict against libreadline6 as it would be illegal to link
     against that. (Closes: 553741)
   * Use bash for clisp-link (Closes: #530054)
   * New upstream version (Closes: #462742)3
-  * Redid debianization from scratch. 
+  * Redid debianization from scratch.
     (Closes: #504514,#177057,#462085, #488042, #462088, #433592, #433596)
-  * Dropped conflicts with ancient versions of clisp. 
+  * Dropped conflicts with ancient versions of clisp.
   * Changed build system on powerpc, the resulting image
-    passes all tests, so should Closes: #592768 
+    passes all tests, so should Closes: #592768
   * We got a fix the 'file with wrong *pathname-encoding* in ~/' bug.
     (Closes: #443520)
-  * Fix the build on Sparc by disabling FFI and dynamic modules completely. 
+  * Fix the build on Sparc by disabling FFI and dynamic modules completely.
 
  -- Peter Van Eynde <pvaneynd@debian.org>  Tue, 28 Sep 2010 07:31:59 +0200
 
@@ -493,31 +511,31 @@ clisp (1:2.44-1) unstable; urgency=low
     Major changes:
      * CLISP does not come with GNU libffcall anymore.
        This is now a separate package and should be installed separately.
-     
+
      * CLOS now issues warnings of type CLOS:CLOS-WARNING.
        See <http://clisp.cons.org/impnotes/mop-clisp.html#mop-clisp-warn>
        for details.
-     
+
      * Speed up list and sequence functions when :
          TEST is EQ, EQL, EQUAL or EQUALP.
-     
+
      * Rename EXT:DELETE-DIR, EXT:MAKE-DIR, and EXT:RENAME-DIR to
        EXT:DELETE-DIRECTORY, EXT:MAKE-DIRECTORY, and EXT:RENAME-DIRECTORY,
        respectively, for consistency with EXT:PROBE-DIRECTORY,
        EXT:DEFAULT-DIRECTORY and CL:PATHNAME-DIRECTORY.
        The old names are still available, but deprecated.
-     
+
      * The :VERBOSE argument to SAVEINITMEM defaults to a new user variable
        *SAVEINITMEM-VERBOSE*, intial value T.
        See <http://clisp.cons.org/impnotes/image.html> for details.
-     
+
      * Bug fixes:
        + Fix FRESH-LINE at the end of a line containing only TABs. [ 1834193 ]
        + PPRINT-LOGICAL-BLOCK no longer ignores *PRINT-PPRINT-DISPATCH-TABLE*.
          [ 1835520 ]
        + BYTE is now a full-fledged type. [ 1854698 ]
        + Fix linux:dirent definition in the bindings/glibc module. [ 1779490 ]
-       + Symbolic links into non-existent directories can now be deleted. 
+       + Symbolic links into non-existent directories can now be deleted.
            [ 1860489 ]
        + DIRECTORY :FULL on directories now returns the same information as
          on files. [ 1860677 ]
@@ -530,7 +548,7 @@ clisp (1:2.44-1) unstable; urgency=low
        + Repeated terminating signals kill CLISP instantly with the correct
          exit code. [ 1871205 ]
        + Stack inspection is now safer. [ 1506316 ]
-       + Errors in the RC-file and init files are now handled properly. 
+       + Errors in the RC-file and init files are now handled properly.
           [ 1714737 ]
        + Avoid the growth of the restart set with each image save. [ 1877497 ]
        + Handle foreign functions coming from the old image which cannot be
@@ -563,13 +581,13 @@ clisp (1:2.43-1) unstable; urgency=low
 
 clisp (1:2.42-3) unstable; urgency=low
 
-  * Forgot to regenerate configure script. 2.42 for real this time! 
+  * Forgot to regenerate configure script. 2.42 for real this time!
 
  -- Peter Van Eynde <pvaneynd@debian.org>  Fri, 26 Oct 2007 23:41:53 +0200
 
 clisp (1:2.42-2) unstable; urgency=low
 
-  * Fix glob expansion 
+  * Fix glob expansion
   * Fix clisp version number.
 
  -- Peter Van Eynde <pvaneynd@debian.org>  Fri, 26 Oct 2007 06:11:54 +0200
@@ -579,7 +597,7 @@ clisp (1:2.42-1) unstable; urgency=low
   * New upstream version.
   * added hurd-i386 to architectures (Closes: #434719)
   * Use Vcs-Bzr in control file
-  * clisp now uses /usr/lib/clisp-<version> 
+  * clisp now uses /usr/lib/clisp-<version>
 
  -- Peter Van Eynde <pvaneynd@debian.org>  Fri, 26 Oct 2007 05:13:42 +0200
 
@@ -605,7 +623,7 @@ clisp (1:2.40-2) unstable; urgency=low
   * Included documentation patch from
     https://sourceforge.net/tracker/?func=detail&atid=101355&aid=1569234&group_id=1355
   * Fix FTBFS on ia64 by not using -O2 when compiling. Stable gcc, isn't it?
-  * On second thoughts, let us try if doing this also helps sparc and mipsel. 
+  * On second thoughts, let us try if doing this also helps sparc and mipsel.
 
  -- Peter Van Eynde <pvaneynd@debian.org>  Wed,  4 Oct 2006 18:10:31 +0200
 
@@ -613,7 +631,7 @@ clisp (1:2.40-1) unstable; urgency=low
 
   * New upstream version.
   * Don't run test anymore as they make the build fail hard.
-  * Fixed clisp manual page 
+  * Fixed clisp manual page
 
  -- Peter Van Eynde <pvaneynd@debian.org>  Mon,  2 Oct 2006 14:43:30 +0200
 
@@ -663,7 +681,7 @@ clisp (1:2.39-1) unstable; urgency=low
       + BDB:DBC-GET now accepts :READ-COMMITTED and :READ-UNCOMMITTED.
       + POSIX:GROUP-INFO and POSIX:USER-INFO now handle errors correctly.
   * Use CFLAGS as configure now respects this.
-  * Fixed clisp.1 manual page, it had '.sp \-1'. 
+  * Fixed clisp.1 manual page, it had '.sp \-1'.
 
  -- Peter Van Eynde <pvaneynd@debian.org>  Fri, 28 Jul 2006 06:07:21 +0200
 
@@ -694,7 +712,7 @@ clisp (1:2.38-6) unstable; urgency=low
 clisp (1:2.38-5) unstable; urgency=low
 
   * Added support for GNU/kFreeBSD (Closes: #366143)
-  * Updated standard version without real changes. 
+  * Updated standard version without real changes.
 
  -- Peter Van Eynde <pvaneynd@debian.org>  Mon, 15 May 2006 00:57:39 +0200
 
@@ -720,8 +738,8 @@ clisp (1:2.38-3) unstable; urgency=low
   * Build with gcc-4.1, should fix:
     Closes: #344525, #349229.
   * Also support GNU/kFreeBSD. Closes: #342640
-  * Removed build-essential dependency of clisp-dev and replaced it 
-    with the used packages.  
+  * Removed build-essential dependency of clisp-dev and replaced it
+    with the used packages.
 
  -- Peter Van Eynde <pvaneynd@debian.org>  Thu, 13 Apr 2006 16:23:56 +0200
 
@@ -762,7 +780,7 @@ clisp (1:2.36-4) unstable; urgency=low
     'ERROR: Package builds clisp-doc_2.36-3_all.deb
      when binary-indep target is not called.
      This is a bug in the packaging'
-  * use v9 sparc as cpu, as the assembler requires this. 
+  * use v9 sparc as cpu, as the assembler requires this.
 
  -- Peter Van Eynde <pvaneynd@debian.org>  Fri, 20 Jan 2006 09:43:33 +0100
 
@@ -798,7 +816,7 @@ clisp (1:2.36-1) unstable; urgency=low
     for all pratical purposes the port is dead.
     Patches welcome.
     Closes: #162019, #62116, #64853
-  * Improved package descriptions. 
+  * Improved package descriptions.
 
  -- Peter Van Eynde <pvaneynd@debian.org>  Thu,  8 Dec 2005 08:16:40 +0100
 
@@ -818,7 +836,7 @@ clisp (1:2.35-8) unstable; urgency=low
   * Corrected the conflicts of the sub-packages.
   * Removed unrequired patches from the sources
   * Simplified creation of mem files: now the
-    original file is always left in place, and 
+    original file is always left in place, and
     a new file with clc in created on install.
 
  -- Peter Van Eynde <pvaneynd@debian.org>  Sat,  5 Nov 2005 23:38:58 +0100
@@ -844,7 +862,7 @@ clisp (1:2.35-7) unstable; urgency=low
     that upstream or the gcc maintainers get this one right.
 
     Change: also use gcc-3.3 for m68k.
-    
+
  -- Peter Van Eynde <pvaneynd@debian.org>  Sat, 29 Oct 2005 16:55:28 +0200
 
 clisp (1:2.35-6) unstable; urgency=low
@@ -881,13 +899,13 @@ clisp (1:2.35-3) unstable; urgency=low
   * Updated FSF address
   * New maintainer. (Closes: #330076: RFA: clisp -- GNU CLISP, a Common
     Lisp implementation - Debian Bug report logs)
-  * Added dependency for quilt 
+  * Added dependency for quilt
 
  -- Peter Van Eynde <pvaneynd@debian.org>  Mon, 17 Oct 2005 23:00:37 +0200
 
 clisp (1:2.35-2) unstable; urgency=low
 
-  * Fix FTBFS caused by charset encoding of fasl version code. 
+  * Fix FTBFS caused by charset encoding of fasl version code.
 
  -- Will Newton <will@debian.org>  Tue, 13 Sep 2005 19:58:33 +0100
 
@@ -901,7 +919,7 @@ clisp (1:2.35-1) unstable; urgency=low
 
 clisp (1:2.34-5) unstable; urgency=low
 
-  * More build fixes for CLX. 
+  * More build fixes for CLX.
 
  -- Will Newton <will@debian.org>  Thu, 11 Aug 2005 21:58:31 +0100
 
@@ -914,7 +932,7 @@ clisp (1:2.34-4) unstable; urgency=low
 
 clisp (1:2.34-3) unstable; urgency=low
 
-  * Further build fixes for arm and mips. 
+  * Further build fixes for arm and mips.
 
  -- Will Newton <will@debian.org>  Tue,  9 Aug 2005 20:22:38 +0100
 
@@ -922,7 +940,7 @@ clisp (1:2.34-2) unstable; urgency=low
 
   * Fix clisp-dev readline depends.
   * Add build-dep on xutils. (Closes: #321045)
-  * Fixes for build on mips, mipsel and arm. 
+  * Fixes for build on mips, mipsel and arm.
 
  -- Will Newton <will@debian.org>  Mon,  8 Aug 2005 19:46:27 +0100
 
@@ -939,13 +957,13 @@ clisp (1:2.34-1) unstable; urgency=low
 
 clisp (1:2.33.2-10) unstable; urgency=low
 
-  * Build dep on gcc 2.95 on mipsel. 
+  * Build dep on gcc 2.95 on mipsel.
 
  -- Will Newton <will@debian.org>  Wed, 23 Feb 2005 00:00:19 +0000
 
 clisp (1:2.33.2-9) unstable; urgency=low
 
-  * Actually enable FFI on mipsel. 
+  * Actually enable FFI on mipsel.
 
  -- Will Newton <will@debian.org>  Sun, 20 Feb 2005 15:19:15 +0000
 
@@ -954,7 +972,7 @@ clisp (1:2.33.2-8) unstable; urgency=low
   * Acknowledge NMU (Closes: #283171). Thanks Frank!
   * Add patches from Thiemo Seufer to get FFI working on mips/mipsel.
   * Fix URLs in READMEs (Closes: #296000).
-  * Build Depend on libreadline5-dev. 
+  * Build Depend on libreadline5-dev.
 
  -- Will Newton <will@debian.org>  Sun, 20 Feb 2005 13:40:24 +0000
 
@@ -982,7 +1000,7 @@ clisp (1:2.33.2-6) unstable; urgency=low
 
 clisp (1:2.33.2-5) unstable; urgency=low
 
-  * Add support for FFI on mipsel. 
+  * Add support for FFI on mipsel.
 
  -- Will Newton <will@debian.org>  Fri, 17 Sep 2004 19:59:02 +0100
 
@@ -995,7 +1013,7 @@ clisp (1:2.33.2-4) unstable; urgency=low
 
 clisp (1:2.33.2-3) unstable; urgency=low
 
-  * Fix FFI for ia64 (Closes: #200245, #269556). 
+  * Fix FFI for ia64 (Closes: #200245, #269556).
 
  -- Will Newton <will@debian.org>  Mon,  6 Sep 2004 23:34:53 +0100
 
@@ -1023,7 +1041,7 @@ clisp (1:2.33.1-1) unstable; urgency=low
 clisp (1:2.33-2) unstable; urgency=medium
 
   * Build fixes for alpha, arm and hppa.
-  * Updated description. 
+  * Updated description.
 
  -- Will Newton <will@debian.org>  Wed, 24 Mar 2004 19:25:50 +0000
 
@@ -1066,25 +1084,25 @@ clisp (1:2.32-5) unstable; urgency=low
     using the disassemble function requires gdb installed.
   * Shuffle declaration in lispbibl.d to fix arm build.
   * Disable FFI on ia64 to fix FTBFS. (Closes: #224462)
-  * Add a missing typecode guard to fix build on 64bit arches. 
+  * Add a missing typecode guard to fix build on 64bit arches.
 
  -- Will Newton <will@debian.org>  Mon, 19 Jan 2004 20:44:17 +0000
 
 clisp (1:2.32-4) unstable; urgency=low
 
-  * OK, I give in. Try disabling typecodes on all arches. 
+  * OK, I give in. Try disabling typecodes on all arches.
 
  -- Will Newton <will@debian.org>  Thu, 15 Jan 2004 00:39:24 +0000
 
 clisp (1:2.32-3) unstable; urgency=low
 
-  * Fix for typecodes build (ia64, alpha). 
+  * Fix for typecodes build (ia64, alpha).
 
  -- Will Newton <will@debian.org>  Mon,  5 Jan 2004 21:57:11 +0000
 
 clisp (1:2.32-2) unstable; urgency=low
 
-  * Reintroduce mips build fix. 
+  * Reintroduce mips build fix.
 
  -- Will Newton <will@debian.org>  Sat,  3 Jan 2004 13:44:49 +0000
 
@@ -1104,7 +1122,7 @@ clisp (1:2.31-4) unstable; urgency=low
   * Build depend on new version of libsigsegv-dev.
   * Add Conflicts on old versions of clisp-doc. (Closes: #211873)
   * Rebuild against new libc6 and libsigsegv.
-    - Should fix hppa build (Closes: #199025) 
+    - Should fix hppa build (Closes: #199025)
 
  -- Will Newton <will@debian.org>  Mon, 22 Sep 2003 09:23:29 +0100
 
@@ -1128,7 +1146,7 @@ clisp (1:2.31-1) unstable; urgency=low
   * New upstream version.
   * Bumped DH_COMPAT to 4.
   * Bumped standards version to 3.6.1.
-  * Cleaned up build process. 
+  * Cleaned up build process.
 
  -- Will Newton <will@debian.org>  Thu,  4 Sep 2003 18:14:02 +0100
 
@@ -1141,7 +1159,7 @@ clisp (1:2.30-9) unstable; urgency=low
 
 clisp (1:2.30-8) unstable; urgency=low
 
-  * Fix build with gcc-3.3 (Closes: #196246) 
+  * Fix build with gcc-3.3 (Closes: #196246)
 
  -- Will Newton <will@debian.org>  Thu,  5 Jun 2003 19:35:16 +0100
 
@@ -1160,7 +1178,7 @@ clisp (1:2.30-6.1) unstable; urgency=low
   * Remove obsolete install-defsystem & remove-defsystem options in clisp.sh
   * Add preinst and postrm files to remove .mem and .run files.
   Closes:#174272,#173728,#162186.
-  * Exclude lispinit.mem from md5sums since this file is modified after the 
+  * Exclude lispinit.mem from md5sums since this file is modified after the
   Common Lisp Controller installation.
 
  -- Kevin M. Rosenberg <kmr@debian.org>  Tue,  4 Mar 2003 10:32:15 -0700
@@ -1176,7 +1194,7 @@ clisp (1:2.30-6) unstable; urgency=low
 
 clisp (1:2.30-5) unstable; urgency=low
 
-  * More alpha fixes. 
+  * More alpha fixes.
 
  -- Will Newton <will@debian.org>  Tue, 24 Sep 2002 00:06:58 +0100
 
@@ -1187,7 +1205,7 @@ clisp (1:2.30-4) unstable; urgency=low
    - Closes: #123035, #126913, #118818, #123076, #149131
    - Closes: #46059, #108901, #130077
   * Disable FFI on mipsel.
-  * Try and fix m68k. 
+  * Try and fix m68k.
 
  -- Will Newton <will@debian.org>  Mon, 23 Sep 2002 16:56:41 +0100
 
@@ -1197,7 +1215,7 @@ clisp (1:2.30-3) unstable; urgency=low
   * common-lisp-controller support. (Closes: Bug#108884)
     - Thanks to Kevin M. Rosenberg <kmr@debian.org>
   * Fix bashisms in c-l-c code.
-  * First upload as a DD! 
+  * First upload as a DD!
 
  -- Will Newton <will@debian.org>  Sun, 22 Sep 2002 21:08:40 +0100
 
@@ -1225,13 +1243,13 @@ clisp (1:2.30-1) unstable; urgency=low
 
 clisp (1:2.29-2) unstable; urgency=low
 
-  * Add regexp module support. 
+  * Add regexp module support.
 
  -- Will Newton <will@debian.org>  Sun, 11 Aug 2002 22:06:51 +0100
 
 clisp (1:2.29-1) unstable; urgency=low
 
-  * New upstream release. 
+  * New upstream release.
 
  -- Will Newton <will@debian.org>  Wed, 31 Jul 2002 01:48:37 +0100
 
@@ -1243,7 +1261,7 @@ clisp (1:2.28-2) unstable; urgency=low
   * Acknowledge NMU (Closes: Bug#130077)
   * Add glibc bindings.
   * Yet more hppa fixes.
-  * First attempt at mipsel support. 
+  * First attempt at mipsel support.
 
  -- Will Newton <will@debian.org>  Sat, 13 Jul 2002 14:57:06 +0100
 
@@ -1263,13 +1281,13 @@ clisp (1:2.28-0.6) unstable; urgency=low
 
 clisp (1:2.28-0.5) unstable; urgency=low
 
-  * Hopefully fix ARM build. 
+  * Hopefully fix ARM build.
 
  -- Will Newton <will@debian.org>  Thu, 21 Mar 2002 13:32:07 +0000
 
 clisp (1:2.28-0.4) unstable; urgency=low
 
-  * Hopefully fix sparc build. 
+  * Hopefully fix sparc build.
 
  -- Will Newton <will@debian.org>  Thu, 21 Mar 2002 03:15:22 +0000
 
@@ -1308,7 +1326,7 @@ clisp (1:2.27-0.4) unstable; urgency=low
     (closes: #111285)
   * groff build-dep added.
   * lintian clean.
-  
+
 
  -- Francesco P. Lovergine <frankie@debian.org>  Wed, 30 Jan 2002 17:32:03 +0100
 
@@ -1317,7 +1335,7 @@ clisp (1:2.27-0.3) unstable; urgency=low
   * Non-maintainer upload
   * global register assignment in src/lispbibl.d disabled for s390,
     doesn't work on s390 probably due to a compiler bug.
-  * s390 ffcall patches applied. (Closes: #130077) 
+  * s390 ffcall patches applied. (Closes: #130077)
 
  -- Gerhard Tonn <gt@debian.org>  Mon, 21 Jan 2002 07:46:15 +0100
 
@@ -1325,7 +1343,7 @@ clisp (1:2.27-0.2) unstable; urgency=low
 
   * Maintainer set to QA.
   * clisp has serious portability issues that I cannot resolve, and upstream
-    appears to have gone dormant again (6 months since last release). 
+    appears to have gone dormant again (6 months since last release).
 
  -- Matt Zimmerman <mdz@debian.org>  Tue, 15 Jan 2002 17:46:15 -0500
 
@@ -1458,6 +1476,3 @@ clisp (1997-09-25-1) unstable; urgency=low
   * first release of clisp.
 
  -- Kevin Dalley <kevind@rahul.net>  Thu, 22 May 1997 23:51:34 -0700
-	
-
-

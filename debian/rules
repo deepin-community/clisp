@@ -24,7 +24,6 @@ override_dh_auto_configure:
 		--with-dynamic-modules \
 		--with-module=gdbm \
 		--with-module=berkeley-db \
-		--with-module=pcre \
 		--with-module=rawsock \
 		--with-module=clx/new-clx \
 		--with-module=bindings/glibc \

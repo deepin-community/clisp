@@ -3,8 +3,7 @@ Section: lisp
 Priority: optional
 Maintainer: Debian Common Lisp Team <debian-common-lisp@lists.debian.org>
 Uploaders: Peter Van Eynde <pvaneynd@debian.org>,
-           Christoph Egger <christoph@debian.org>,
-           Sébastien Villemot <sebastien@debian.org>
+           Christoph Egger <christoph@debian.org>
 Build-Depends:
  debhelper-compat (= 13),
  debhelper (>= 12.8~),
@@ -22,7 +21,6 @@ Build-Depends:
  libffcall-dev,
  libgdbm-dev,
  libpq-dev,
- libpcre3-dev,
  libdbus-1-dev,
  zlib1g-dev,
  libunistring-dev,
@@ -30,7 +28,7 @@ Build-Depends:
  libfcgi-dev,
  libsvm-dev,
  libpari-dev
-Standards-Version: 4.6.0
+Standards-Version: 4.6.1
 Homepage: http://www.clisp.org/
 Vcs-Git: https://salsa.debian.org/common-lisp-team/clisp.git
 Vcs-Browser: https://salsa.debian.org/common-lisp-team/clisp
@@ -52,7 +50,6 @@ Suggests: gdb,
           clisp-module-gdbm,
           clisp-module-libsvm,
           clisp-module-pari,
-          clisp-module-pcre,
           clisp-module-postgresql,
           clisp-module-zlib,
           hyperspec
@@ -110,19 +107,6 @@ Description: GNU CLISP module that adds an interface to Berkeley DB
  .
  This package adds a module to CLISP that implements an interface to the
  Berkeley DB.
-
-Package: clisp-module-pcre
-Architecture: any
-Depends: ${shlibs:Depends}, clisp (= ${binary:Version}), ${misc:Depends}
-Enhances: clisp
-Description: GNU CLISP module that adds libpcre support
- GNU CLISP is a Common Lisp implementation.
- It conforms to the ANSI Common Lisp standard, and offers many extensions.
- It runs on all desktop operating systems (GNU and Unix systems, macOS,
- Windows) and is particularly memory-efficient.
- .
- This adds a module to CLISP that implements an interface to the
- libpcre which implements Perl-compatible regular expressions.
 
 Package: clisp-module-postgresql
 Architecture: any
