@@ -1,6 +1,6 @@
 /*
  * Streams for CLISP
- * Bruno Haible 1990-2008, 2016-2020
+ * Bruno Haible 1990-2008, 2016-2024
  * Sam Steingold 1998-2011, 2016-2017
  * Generic Streams: Marcus Daniels 8.4.1994
  * SCREEN package for Win32: Arseny Slobodjuck 2001-02-14
@@ -3493,7 +3493,11 @@ local void clear_tty_input (Handle handle) {
   errno = saved_errno;
   #endif
   if (!(ret==0)) {
-    if (!((errno==ENOTTY)||(errno==EINVAL))) { /* no TTY: OK */
+    if (!((errno==ENOTTY)||(errno==EINVAL) /* no TTY: OK */
+          #if defined(UNIX_HAIKU)
+          ||(errno==B_ERROR)
+          #endif
+       ) ) {
       local bool flag = false;
       /* report other Error, but only once */
       if (!flag) { flag = true; OS_error(); }
@@ -3517,9 +3521,6 @@ local void clear_tty_input (Handle handle) {
 #elif defined(UNIX_AIX)
   /* ioctl() on /dev/null produces ENODEV. */
   #define IS_EINVAL_EXTRA  ((errno==ENODEV))
-#elif defined(UNIX_IRIX)
-  /* ioctl() on stdout, when it is a pipe, produces ENOSYS. */
-  #define IS_EINVAL_EXTRA  ((errno==ENOSYS))
 #elif defined(UNIX_HAIKU)
   /* ioctl() on /dev/null produces EPERM. */
   #define IS_EINVAL_EXTRA  ((errno==EPERM))
@@ -3596,8 +3597,12 @@ local void clear_tty_output (Handle handle) {
   begin_system_call();
  #ifdef UNIX_TERM_TERMIOS
   if (!( TCFLUSH(handle,TCOFLUSH) ==0)) {
-    if (!((errno==ENOTTY)||IS_EINVAL))
-      { OS_error(); } /* no TTY: OK, report other Error */
+    if (!((errno==ENOTTY)||IS_EINVAL /* no TTY: OK */
+          #if defined(UNIX_HAIKU)
+          ||(errno==B_ERROR)
+          #endif
+       ) )
+      { OS_error(); } /* report other Error */
   }
  #endif
   end_system_call();
@@ -3995,8 +4000,6 @@ local _Noreturn void error_interrupt (void) {
   #if (__GLIBC__ > 2 || (__GLIBC__ == 2 && __GLIBC_MINOR__ >= 2))
     /* glibc >= 2.2 also has UCS-4BE, UCS-4LE but WCHAR_T is more efficient. */
     #define CLISP_INTERNAL_CHARSET  "WCHAR_T"
-  #elif defined(UNIX_HPUX) && BIG_ENDIAN_P
-    #define CLISP_INTERNAL_CHARSET  "ucs4"
   #else
     #if BIG_ENDIAN_P
       #define CLISP_INTERNAL_CHARSET  "UCS-4"
@@ -13953,38 +13956,25 @@ modexp maygc struct timeval * sec_usec
       usec = value1;
     }
   }
-#if defined(SIZEOF_STRUCT_TIMEVAL) && SIZEOF_STRUCT_TIMEVAL == 16
- #define TV_SEC(s)  I_to_uint64(check_uint64(s))
-#else
- #define TV_SEC(s)  I_to_uint32(check_uint32(s))
-#endif
-  tv->tv_sec = TV_SEC(sec);
-  tv->tv_usec = (missingp(usec) ? 0 : TV_SEC(usec));
-#undef TV_SEC
+  tv->tv_sec = (sizeof(tv->tv_sec) > 4 ? I_to_sint64(check_sint64(sec)) : I_to_sint32(check_sint32(sec)));
+  tv->tv_usec = (missingp(usec) ? 0 : I_to_uint32(check_uint32(usec)));
   return tv;
 }
 
 /* Convert C sec/usec (struct timeval et al) pair into Lisp number (of seconds)
  if abs_p is true, add UNIX_LISP_TIME_DIFF
  can trigger GC */
-#if defined(SIZEOF_STRUCT_TIMEVAL) && SIZEOF_STRUCT_TIMEVAL == 16
-#define TO_INT(x)  uint64_to_I(x)
-modexp maygc object sec_usec_number (uint64 sec, uint64 usec, bool abs_p)
-#else
-#define TO_INT(x)  uint32_to_I(x)
-modexp maygc object sec_usec_number (uint32 sec, uint32 usec, bool abs_p)
-#endif
+modexp maygc object sec_usec_number (sint64 sec, uint32 usec, bool abs_p)
 {
-  pushSTACK(TO_INT((abs_p ? UNIX_LISP_TIME_DIFF : 0) + sec));
+  pushSTACK(Q_to_I((abs_p ? UNIX_LISP_TIME_DIFF : 0) + sec));
   if (usec) {
     /* this is likely to end up as a ratio... */
-    pushSTACK(TO_INT(usec)); pushSTACK(fixnum(1000000)); funcall(L(slash),2);
+    pushSTACK(uint32_to_I(usec)); pushSTACK(fixnum(1000000)); funcall(L(slash),2);
     pushSTACK(value1); funcall(L(plus),2);
     return value1;
   } else
     return popSTACK();
 }
-#undef TO_INT
 
 #if defined(HAVE_SELECT) || defined(WIN32_NATIVE)
 /* wait for the socket server to have a connection ready
@@ -14857,7 +14847,7 @@ local maygc object handle_pathname (Handle fd) {
   /* Most UNIX platforms have /dev/fd/[012] pseudo-files. */
   /* AIX has /proc/<pid>/fd/[012] pseudo-files but they have zero permissions
      and are therefore not usable for any purpose. */
- #if defined(UNIX) && !(defined(UNIX_AIX) || defined(UNIX_HPUX) || defined(UNIX_BEOS) || defined(UNIX_HAIKU) || defined(UNIX_MINIX))
+ #if defined(UNIX) && !(defined(UNIX_AIX) || defined(UNIX_BEOS) || defined(UNIX_HAIKU) || defined(UNIX_MINIX))
   var char buf[20];
   begin_system_call();
   sprintf(buf,"/dev/fd/%d",fd);

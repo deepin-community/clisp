@@ -31,8 +31,6 @@
    the closing brace.
 */
 
-#include <config.h>
-
 typedef unsigned char  uintB;
 typedef unsigned short  uintW;
 typedef unsigned long  uintL;
@@ -63,6 +61,11 @@ extern "C" void exit(int);
  and likewise "var chart foo = ..." into "var chart foo; foo = ...". */
 #if defined(__GNUG__) && (__GNUC__ == 3) && (__GNUC_MINOR__ == 3)
 #define SPLIT_OBJECT_INITIALIZATIONS
+#endif
+
+/* Avoid conflict with function eof(), declared on native Windows.  */
+#if defined(_WIN32) && !defined(__CYGWIN__)
+#define eof tt_eof
 #endif
 
 

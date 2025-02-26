@@ -17,8 +17,8 @@ Forwarded: not-needed
 Last-Update: 2021-08-29
 ---
 This patch header follows DEP-3: http://dep.debian.net/deps/dep3/
---- a/src/cfgunix.lisp
-+++ b/src/cfgunix.lisp
+--- clisp.orig/src/cfgunix.lisp
++++ clisp/src/cfgunix.lisp
 @@ -21,7 +21,7 @@
                  (with-open-stream (s (make-pipe-input-stream "uname -a"))
                    (read-line s)))))))
@@ -48,7 +48,7 @@ This patch header follows DEP-3: http://dep.debian.net/deps/dep3/
  
  ;; Common Lisp HyperSpec access
  (defvar *clhs-root-default*)
-@@ -61,4 +64,7 @@ in ~/.clisprc.  On win32 you can also us
+@@ -61,4 +64,7 @@
    "This returns the root URL for the Common Lisp HyperSpec.
  You can set the environment variable `CLHSROOT' or redefine this function
  in ~/.clisprc.  On win32 you can also use the Registry."
@@ -57,19 +57,9 @@ This patch header follows DEP-3: http://dep.debian.net/deps/dep3/
 +      (and (probe-file #p"/usr/share/doc/hyperspec/Data/Map_Sym.txt")
 +           "file:///usr/share/doc/hyperspec/")
 +      *clhs-root-default*))
---- a/src/clhs.lisp
-+++ b/src/clhs.lisp
-@@ -36,7 +36,8 @@
-     (:chromium "chromium-browser" "~a")
-     (:conkeror "conkeror" "~a")
-     (:opera "opera" "~a")
--    (:emacs "emacsclient" "--eval" "(browse-url ~s)"))
-+    (:emacs "emacsclient" "--eval" "(browse-url ~s)")
-+    (:sensible-browser "sensible-browser" "~a"))
-   "Alist of browsers and commands that invoke them.
- `~a' will be replaced with the URL to view.")
- (defvar *browser* nil
-@@ -284,7 +285,8 @@ set *HTTP-PROXY*, and return it; otherwi
+--- clisp.orig/src/clhs.lisp
++++ clisp/src/clhs.lisp
+@@ -299,7 +299,8 @@
                                      (get-map-1996))
                                     ((or (search "maclisp.org/" clhs-root)
                                          (search "lispworks.com/" clhs-root)

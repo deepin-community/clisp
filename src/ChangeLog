@@ -1,3 +1,593 @@
+2024-11-23  Bruno Haible  <bruno@clisp.org>
+
+	Upgrade ASDF. This fixes a bug on Haiku.
+	Reported by Alexandru Popa <alpopa@gmail.com>
+	in <https://sourceforge.net/p/clisp/mailman/message/58844235/>.
+	* modules/asdf/asdf.lisp: Upgrade to upstream 3.3.6.7.
+	* modules/asdf/asdf.xml: Update.
+	* doc/impnotes.html: Regenerated.
+
+2024-11-19  Bruno Haible  <bruno@clisp.org>
+
+	Add comments.
+	* Makefile.devel (build-porting*): Add comments regarding *_WORKS macros
+	in lispbibl.d.
+
+2024-11-18  Bruno Haible  <bruno@clisp.org>
+
+	Enable most optimizations on Linux/loongarch64.
+	* lispbibl.d (LOONGARCH64): New macro.
+	(C_CODE_ALIGNMENT, intDsize, varobject_alignment, SP_register,
+	ASM_get_SP_register, SP_DOWN): Define for loongarch64.
+	(MAPPABLE_ADDRESS_RANGE_START, MAPPABLE_ADDRESS_RANGE_END, SINGLEMAP_*,
+	HEAPCODES1BIT_WITH_TRIVIALMAP_WORKS, HEAPCODES1BIT_WITH_MALLOC_WORKS,
+	GENERIC64C_HEAPCODES_WORKS, TYPECODES_WITH_TRIVIALMAP_WORKS,
+	TYPECODES_WITH_MALLOC_WORKS): Define for Linux/loongarch64.
+	* Makefile.devel (multibuild-linux-loongarch64): New target. Enable all
+	build variants that work.
+	* makemake.in (XCFLAGS): For Linux/loongarch64, enable all optimizations
+	except ASM.
+
+2024-11-17  Bruno Haible  <bruno@clisp.org>
+
+	Review memory mapping on Linux/powerpc64 with newer Linux kernels.
+	* lispbibl.d: Update comments.
+
+2024-11-17  Bruno Haible  <bruno@clisp.org>
+
+	Review memory mapping on Linux/arm64 with newer Linux kernels.
+	* lispbibl.d (MALLOC_ADDRESS_RANGE): Move override.
+
+2024-11-16  Bruno Haible  <bruno@clisp.org>
+
+	Fix a compiler bug that would lead to a wrong value of STACK.
+	Reported by Paul F. Dietz
+	at <https://gitlab.com/gnu-clisp/clisp/issues/11>.
+	* compiler.lisp (simplify): Fix the (SKIPI k11 k21 n1)
+	(SKIPI k21 k22 n2) combination rule.
+
+2024-11-13  Bruno Haible  <bruno@clisp.org>
+
+	Add user configuration for Haiku, part 3.
+	Reported by Alexandru Popa <alpopa@gmail.com>.
+	* cfghaiku.lisp: Remove *clhs-root-default* assignment. It is being
+	added automatically to config.lisp during the build process.
+
+2024-11-12  Bruno Haible  <bruno@clisp.org>
+
+	Improve memory mapping on Linux/s390x with newer Linux kernels.
+	Reported by Sébastien Villemot in
+	<https://gitlab.com/gnu-clisp/clisp/-/issues/2>.
+	* lispbibl.d [UNIX_LINUX && S390_64]: Support more variation of
+	CODE_ADDRESS_RANGE. Choose larger values for
+	MAPPABLE_ADDRESS_RANGE_START, MAPPABLE_ADDRESS_RANGE_END. Choose new
+	values for SINGLEMAP_TYPE_MASK, SINGLEMAP_oint_type_shift. Don't favour
+	GENERIC64_HEAPCODES. Set HEAPCODES1BIT_WITH_MALLOC_WORKS to 1.
+	* Makefile.devel (multibuild-linux-s390x): Enable all build variants.
+	* tests/alltest.tst: Allow new values of most-positive-fixnum,
+	most-negative-fixnum.
+
+2024-11-12  Bruno Haible  <bruno@clisp.org>
+
+	Fix compilation errors of SAFETY=3 builds with gcc versions < 5.
+	* lispbibl.d (OBJECT_STRUCT, CHART_STRUCT): Don't define with gcc
+	versions < 5.
+
+2024-11-10  Bruno Haible  <bruno@clisp.org>
+
+	Fix universal-time overflow in the year 2036.
+	Reported by Bernhard M. Wiedemann via Dr. Werner Fink in
+	<https://sourceforge.net/p/clisp/feature-requests/59/>
+	<https://gitlab.com/gnu-clisp/clisp/-/issues/48>.
+	* lispbibl.d (sec_usec_number): Change seconds parameter to sint64 and
+	microseconds parameter to uint32.
+	(Q_to_I): Declare unconditionally.
+	* intelem.d (Q_to_I): Define unconditionally.
+	* time.d (convert_time_to_universal): Cast time_t to sint64. Use Q_to_I
+	instead of UL_to_I.
+	(convert_time_from_universal): Use I_to_Q instead of I_to_UL.
+	(real_time_sec): Return a sint64.
+	(GET-UNIVERSAL-TIME): Use Q_to_I instead of UL_to_I.
+	* stream.d (sec_usec): Check that the seconds parameter is a sint64 or
+	sint64, depending on the type of 'tv_sec' in 'struct timeval'.
+	(sec_usec_number): Change seconds parameter to sint64 and microseconds
+	parameter to uint32. Use Q_to_I.
+	* modules/syscalls/calls.c (file_stat_to_STACK): Convert each st_*time
+	value to sint64 before adding +UNIX_LISP_TIME_DIFF.
+
+2024-11-10  Bruno Haible  <bruno@clisp.org>
+
+	Remove support for C compilers that don't support 64-bit 'long long'.
+	* intparam.c: Assume HAVE_LONG_LONG_INT.
+	* m4/intparam.m4 (CL_INTPARAM_CROSS): Don't require
+	AC_TYPE_LONG_LONG_INT. Handle 'long long' and 'unsigned long long' types
+	always.
+	* configure.in: Don't invoke AC_TYPE_LONG_LONG_INT.
+	* src/configure: Regenerated.
+	* lispbibl.d (LL, ULL): Remove macros.
+	(SLONGLONG, ULONGLONG): Define unconditionally.
+	(uint33, sint33, uint48, sint48, uint64, sint64): Define
+	unconditionally.
+	(sintL2, uintL2): Remove types.
+	(timescore_t, gc_space): Use uint64 instead of uintL2.
+	(I_to_UQ, I_to_Q): Declare unconditionally.
+	(I_to_uint64, I_to_sint64): Declare unconditionally.
+	* genclisph.d (printf_arg, fill_printf_arg, ULLsuffix,
+	print_printf_arg): Assume HAVE_LONG_LONG_INT.
+	* unixaux.d (FACTOR, NSPERSEC): Update.
+	* spvw_gcstat.d (gc_space, inc_gc_space): Use uint64 instead of uintL2.
+	* spvw_garcol.d (uintVLA): Likewise.
+	* spvw_garcol_old.d (uintVLA): Likewise.
+	* spvw_sigsegv.d (print_mem_stats): Use fprintf %llu unconditionally.
+	* debug.d (SYS::%ROOM): Use UQ_to_I unconditionally.
+	* time.d (convert_time_to_universal, real_time_sec): Assume
+	HAVE_LONG_LONG_INT.
+	(SYSTEM::%%TIME): Use uint64 unconditionally.
+	* aridecl.d (wbitc): Assume HAVE_LONG_LONG_INT.
+	* arilev0.d (mulu32, divu_6432_3232): Assume HAVE_LONG_LONG_INT.
+	* arilev1.d (muluD, divuD): Assume HAVE_LONG_LONG_INT.
+	* intelem.d (I_to_UQ, I_to_Q): Define unconditionally.
+	* intlog.d (logcount_64): Update.
+	* intmal.d (FN_fak_I): Update.
+	* intsqrt.d: Use uint64 instead of uintL2.
+	* foreign.d (struct_uint64, struct_sint64): Remove types. All uses
+	replaced with uint64, sint64.
+	(error_64bit): Remove function.
+	(foreign_layout, convert_from_foreign, convert_to_foreign, do_av_start,
+	do_av_arg, do_va_start, do_va_arg, do_va_return): Assume
+	HAVE_LONG_LONG_INT.
+	* tests/ffi.tst: Remove outdated comment.
+
+2024-11-10  Bruno Haible  <bruno@clisp.org>
+
+	Remove support for Mach systems without mmap.
+	This fixes a compilation error on Mac OS X caused by the last commit.
+	* lispbibl.d: Remove HAVE_MACH_VM specific code.
+	* unix.d: Likewise.
+	* spvw.d, spvw_mmap.d: Likewise.
+	* configure.in: Don't invoke CL_MACH_VM.
+	* m4/mach-vm.m4: Remove file.
+	* aclocal.m4, src/config*, src/gllib/Makefile.in: Regenerated.
+
+2024-11-10  Bruno Haible  <bruno@clisp.org>
+
+	On Mach, use mach_task_self() instead of task_self().
+	Reported by Florian Weimer in
+	<https://gitlab.com/gnu-clisp/clisp/-/issues/42>.
+	* m4/mach-vm.m4 (CL_MACH_VM): Use mach_task_self() and include the
+	appropriate Mach headers.
+	* unix.d [HAVE_MACH_VM]: Include <mach/mach_init.h>.
+	* spvw_mmap.d (mmap_zeromap, mmap_filemap, munmap, mprotect): Use
+	mach_task_self() instead of task_self().
+	* src/configure: Regenerated.
+
+2024-11-09  Bruno Haible  <bruno@clisp.org>
+
+	doc: Increase user privacy in HTML documentation.
+	* doc/common.xsl: Remove donation request (is redirected to paypal.com
+	and does not work), sourceforge.org reference (can be seen as a web
+	bug), and optional google ad (anti-social).
+	* doc/Makefile (GOOGLEADS): Remove variable.
+	(XMLOUT): Don't set google.ads any more.
+	* doc/*.html: Regenerated.
+
+2024-11-09  Peter Van Eynde  <pvaneynd@mailworks.org>  (tiny change)
+
+	pari: Add support for pari 2.17.
+	* modules/pari/pari.lisp (diffptr): Remove declaration.
+
+2024-11-09  Bruno Haible  <bruno@clisp.org>
+
+	doc: Don't require an internet connection to build the doc.
+	* doc/gpl-2.0.dbk: Fix a syntax error.
+	* doc/impnotes.xml.in: Include fdl-1.3.dbk, gpl-2.0.dbk directly.
+	* doc/impnotes.html: Regenerated.
+
+	doc: Use a local copy of the GFDL and GPL licenses.
+	* doc/fdl-1.3.dbk: New file, from
+	https://www.gnu.org/licenses/fdl-1.3.dbk.
+	* doc/gpl-2.0.dbk: New file, from
+	https://www.gnu.org/licenses/old-licenses/gpl-2.0.dbk.
+	* doc/Makefile (IMPNOTES): Add them.
+
+2024-11-09  Bruno Haible  <bruno@clisp.org>
+
+	doc: Don't use undocumented groff man macro 'an-trap'.
+	* doc/Makefile (MAN_XSL_POSTPROCESS): Replace 'an-trap' with
+	'an-input-trap'.
+
+2024-11-09  Bruno Haible  <bruno@clisp.org>
+
+	doc: Add missing line breaks before .PP.
+	Reported by Erik Auerswald <auerswal@unix-ag.uni-kl.de> in
+	<https://sourceforge.net/p/clisp/bugs/748/>
+	<https://bugs.launchpad.net/ubuntu/+source/clisp/+bug/2022970>
+	<https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=1041788>
+	* doc/Makefile (MAN_XSL_POSTPROCESS): New variable.
+	(clisp.1, clisp-link.1): Use it for post-processing.
+
+2024-11-09  Bruno Haible  <bruno@clisp.org>
+
+	doc: Comments about quality checking.
+	* Makefile.devel (view-man): Use -Tutf8 nowadays.
+	* doc/Makefile: Add comments.
+
+2024-11-09  Bruno Haible  <bruno@clisp.org>
+
+	syscalls tests: Don't assume that errno values are small. For Hurd/i386.
+	* modules/syscalls/test.tst: Start checking the errno values at the
+	minimum valid errno, not at 0.
+
+2024-11-09  Bruno Haible  <bruno@clisp.org>
+
+	Fix memory mapping on Hurd from 2021 or newer.
+	Reported by Flavio Cruz in
+	<https://gitlab.com/gnu-clisp/clisp/-/merge_requests/6>.
+	* lispbibl.d (MAPPABLE_ADDRESS_RANGE_START): Change for Hurd/i386.
+
+2024-11-09  Bruno Haible  <bruno@clisp.org>
+
+	Revisit list of predefined browsers.
+	* clhs.lisp (*browsers*): Add :falkon, :falkon-window, :falkon-tab,
+	:tor, :gnome, :sensible-browser. Change :chromium. Remove :mmm, :mosaic.
+
+2024-11-09  Bruno Haible  <bruno@clisp.org>
+
+	build: Build genclx without gnulib.
+	Reported by Peter Van Eynde in
+	<https://gitlab.com/gnu-clisp/clisp/-/issues/53>.
+	* modules/clx/new-clx/Makefile.in (BUILD_CC, BUILD_CPPFLAGS,
+	BUILD_CFLAGS, BUILD_LDFLAGS): New variables.
+	(clx.d): Use them to compile genclx.c.
+
+2024-11-09  Bruno Haible  <bruno@clisp.org>
+
+	berkeley-db: Fix configure test.
+	* modules/berkeley-db/configure.in: Avoid using uninitialized variables
+	in test programs, especially with -Werror.
+	* modules/berkeley-db/configure: Regenerated.
+
+2024-11-08  Bruno Haible  <bruno@clisp.org>
+
+	berkeley-db: Fix BDB:TXN-RECOVER on 64-bit platforms.
+	Reported by Jerry James in
+	<https://gitlab.com/gnu-clisp/clisp/-/merge_requests/9>.
+	* modules/berkeley-db/bdb.c (BDB:TXN-RECOVER): Change type of local
+	variables.
+
+2024-11-08  Bruno Haible  <bruno@clisp.org>
+
+	berkeley-db: Fix configure test.
+	Reported by Florian Weimer in
+	<https://gitlab.com/gnu-clisp/clisp/-/merge_requests/8>.
+	* modules/berkeley-db/configure.in: Fix arguments to db.stat.
+	* modules/berkeley-db/configure: Regenerated.
+
+2024-11-07  Bruno Haible  <bruno@clisp.org>
+
+	Update the GPL text.
+	* GNU-GPL: Update from <https://ftp.gnu.org/gnu/Licenses/gpl-2.0.txt>.
+
+2024-11-03  Bruno Haible  <bruno@clisp.org>
+
+	Add user configuration for Haiku, part 2.
+	* clhs.lisp (*browsers): Add :webpositive.
+	* cfghaiku.lisp (edit-file): Start the Haiku UI editor in the background.
+	(*browser*): Set to a keyword, not a string.
+
+2024-11-03  Bruno Haible  <bruno@clisp.org>
+
+	Bump version number.
+	* version.sh: Bump version number to 2.49.95+.
+	* version.h, src/configure: Regenerated.
+
+2024-11-03  Bruno Haible  <bruno@clisp.org>
+
+	build: Build the clisp driver program without gnulib, part 2.
+	* makemake.in (install-bin): When building $(bindir)/clisp, use only the
+	user-provided options and -DLISPLIBDIR, -DLOCALEDIR.
+
+2024-11-03  Bruno Haible  <bruno@clisp.org>
+
+	Add user configuration for Haiku.
+	* cfghaiku.lisp: New file, based on cfgunix.lisp, with small changes by
+	Alexandru Popa <alpopa@gmail.com>.
+	* makemake.in (CONFIG): Use it on Haiku.
+
+2024-11-03  Bruno Haible  <bruno@clisp.org>
+
+	Enable most optimizations on Haiku/x86_64.
+	* lispbibl.d (MAPPABLE_ADDRESS_RANGE_START, MAPPABLE_ADDRESS_RANGE_END,
+	SINGLEMAP_*): Define for Haiku/x86_64.
+	(TRIVIALMAP_MEMORY): Don't disable it by default on Haiku/x86_64.
+	(GENERATIONAL_GC): Don't enable it by default on Haiku.
+	* Makefile.devel (multibuild-haiku-64): Enable all build variants that
+	work.
+	* makemake.in (Z_XCFLAGS): For Haiku/x86_64, enable all optimizations
+	except ASM.
+
+2024-11-03  Bruno Haible  <bruno@clisp.org>
+
+	Improve port to Haiku/x86_64.
+	* stream.d (clear_tty_input, clear_tty_output): Ignore error code -1 on
+	Haiku.
+	* time.d (SYS::%SLEEP): On Haiku, use a smaller first argument to
+	select().
+
+2024-11-03  Bruno Haible  <bruno@clisp.org>
+
+	Avoid a hang during configuration on Haiku.
+	* m4/mmap.m4 (CL_MMAP): Don't run the MAP_FIXED test on Haiku.
+
+2024-10-31  Bruno Haible  <bruno@clisp.org>
+
+	Enable most optimizations on Haiku/i386.
+	* Makefile.devel (multibuild-haiku-32): Enable all build variants that
+	work.
+	* makemake.in (Z_XCFLAGS): For Haiku/i386, enable all optimizations
+	except ASM.
+
+2024-10-31  Bruno Haible  <bruno@clisp.org>
+
+	Improve port to Haiku/i386.
+	* lispbibl.d: Update comments.
+	* modules/syscalls/posix.lisp (*services-file*): Set differently on
+	Haiku.
+	* modules/regexp/test.tst: Update expected test result on Haiku.
+	* modules/rawsock/rawsock.c (IFF): Change default to ~0L. This fixes a
+	compilation error on Haiku in debug-gcsafety mode.
+
+2024-10-31  Bruno Haible  <bruno@clisp.org>
+
+	Update to the newest gnulib. This fixes the DEBUG_GCSAFETY builds.
+	Ran "make -f Makefile.devel build-aux-update gnulib-imported \
+	&& make -f Makefile.devel build-prerequisites".
+	* build-aux/config.*: Update.
+	* gllib/*: Update from gnulib.
+	* glm4/*: Likewise.
+	* aclocal.m4, src/configure, src/config.h.in: Regenerated.
+	* modules/*/configure, modules/*/config.h.in: Regenerated.
+
+2024-10-29  Bruno Haible  <bruno@clisp.org>
+
+	build: Build the clisp driver program without gnulib.
+	* makemake.in (clisp${TEXE}): Use only the user-provided options and
+	-DENABLE_RELOCATABLE.
+	* _clisp.c: Don't include config.h.
+
+	build: Fix host-system / target-system confusion.
+	* _clisp.c: Include <fcntl.h>, needed by execname.c.
+	* execname.c: Don't use macro names WIN32_NATIVE, UNIX, UNIX_CYGWIN,
+	my_open_mask that are not present on the target system.
+
+2024-10-29  Bruno Haible  <bruno@clisp.org>
+
+	build: Build the utils/*.c programs without gnulib.
+	* makemake.in (UTILCOMPILE): Use only the user-provided options.
+	(${util}${HEXE}): Remove -I. option.
+	* utils/ccmp2c.c: Don't include <config.h>.
+	* utils/ccpaux.c: Likewise.
+	* utils/comment5.c: Likewise.
+	* utils/deema.c: Likewise.
+	* utils/gctrigger.c: Likewise.
+	* utils/txt2c.c: Likewise.
+	* utils/varbrace.c: Likewise.
+
+2024-10-29  Bruno Haible  <bruno@clisp.org>
+
+	build: Rename CLFLAGS to LDFLAGS, for consistency with Autoconf.
+	* makemake.in: Use Z_LDFLAGS instead of CLFLAGS.
+	* built.d (built_flags): Update.
+
+	build: Separate the user-provided CFLAGS from our added CFLAGS.
+	* makemake.in: New variables A_CFLAGS, Z_CFLAGS, A_XCFLAGS, Z_XCFLAGS.
+
+	build: Separate the user-provided CPPFLAGS from our added CPPFLAGS.
+	* makemake.in: New variables A_CPPFLAGS, Z_CPPFLAGS, A_XCPPFLAGS,
+	Z_XCPPFLAGS.
+
+2024-10-29  Bruno Haible  <bruno@clisp.org>
+
+	Align clisp module system better with GNU standards.
+	* doc/impext.xml: Mention LDFLAGS instead of CLFLAGS.
+	* makemake.in: In makevars and when invoking a 'clisp-module' rule, set
+	LDFLAGS instead of CLFLAGS. Rename MODULE_CLFLAGS_VAR to
+	MODULE_LDFLAGS_VAR.
+	* clisp-link.in: Use LDFLAGS instead of CLFLAGS.
+	* modules/queens/Makefile: Set LDFLAGS instead of CLFLAGS.
+	* modules/matlab/link.sh: Set LDFLAGS instead of CLFLAGS.
+
+2024-09-01  Bruno Haible  <bruno@clisp.org>
+
+	Replace FSF snail-mail addresses with URLs.
+	* spvw.d (print_license): Update GPL license notice.
+
+2024-08-29  Bruno Haible  <bruno@clisp.org>
+
+	build: Modernize 'update-gnulib' target.
+	* Makefile.devel (GNULIB_GIT): Use secured URL.
+	(GNULIB_CVS_ROOT, GNULIB_CVS_REPOSITORY): Remove variables.
+	(update-gnulib): Don't use cvs any more.
+
+2024-08-29  Bruno Haible  <bruno@clisp.org>
+
+	Fix DEPENDENCIES.
+	* DEPENDENCIES: Remove mention of unsupported option
+	--with-ncurses-prefix.
+
+2024-07-12  Bruno Haible  <bruno@clisp.org>
+
+	build: Switch to automake 1.17.
+	* aclocal.m4, src/configure, gllib/Makefile.in: Regenerated.
+	* modules/*/configure: Regenerated.
+
+2024-07-07  Bruno Haible  <bruno@clisp.org>
+
+	build: Support strict ISO C23 compilers.
+	* m4/cc-ema.m4 (CL_CC_NEED_DEEMA): Convert declaration to ISO C.
+	* m4/fenv_default.m4 (CL_FLOAT_DIV0, CL_DOUBLE_DIV0,
+	CL_LONGDOUBLE_DIV0): Rename variable nan to tnan.
+	* m4/select.m4 (CL_SELECT): Don't use K&R C prototype in ISO C 23 or
+	newer.
+	* src/configure: Regenerated.
+
+2024-07-04  Bruno Haible  <bruno@clisp.org>
+
+	Fix compilation error on native Windows.
+	* utils/gctrigger.c (eof): Define as a macro.
+	* utils/varbrace.c (eof): Likewise.
+	* utils/ccmp2c.c (eof): Likewise.
+
+2024-07-04  Bruno Haible  <bruno@clisp.org>
+
+	Update to the newest gnulib.
+	Ran "make -f Makefile.devel build-aux-update gnulib-imported \
+	&& make -f Makefile.devel build-prerequisites".
+	* gllib/*: Update from gnulib.
+	* glm4/*: Likewise.
+	* aclocal.m4, src/configure, src/config.h.in: Regenerated.
+	* modules/*/configure, modules/*/config.h.in: Regenerated.
+
+2024-07-04  Bruno Haible  <bruno@clisp.org>
+
+	build: Prepare for newer gnulib.
+	* Makefile.devel (GNULIB_TOOL, GNULIB_COMMON): Remove variables.
+	(gnulib-imported): Run gnulib-tool in the src directory.
+
+2024-07-04  Bruno Haible  <bruno@clisp.org>
+
+	build: Reduce the size of aclocal.m4.
+	* Makefile.devel (src/aclocal.m4): Use relative filenames in the -I
+	options.
+
+2024-07-04  Bruno Haible  <bruno@clisp.org>
+
+	build: Use newer libtool and build-aux upstream.
+	* Makefile.devel (LIBTOOL_VERSION, AUTOMAKE_VERSION): Increase.
+	(LIBTOOL_SOURCE_URL, AUTOMAKE_GIT, GMALLOC_URL): Use https, not http.
+	(GTK_GIT_ROOT, build-aux-update): Update after GNOME's git has moved.
+
+2024-07-04  Bruno Haible  <bruno@clisp.org>
+
+	build: Fix "error: AM_INIT_AUTOMAKE expanded multiple times".
+	* Makefile.devel (src/aclocal.m4): Eliminate AM_INIT_AUTOMAKE lines.
+
+2024-07-03  Bruno Haible  <bruno@clisp.org>
+
+	Remove traces of SunOS 4 support.
+	* makemake.in: Simplify.
+	* unix.d: Update comments.
+	* _clisp.c: Update comments.
+
+2024-07-02  Bruno Haible  <bruno@clisp.org>
+
+	Remove support for HP-UX.
+	* _clisp.c: Update.
+	* _distmakefile (CC): Simplify.
+	* disassem.lisp (disassemble-machine-code): Simplify.
+	* eval.d: Update.
+	* lispbibl.d: Update.
+	* m4/mmap.m4 (CL_MMAP): Update.
+	* makemake.in: Stop recommending --with-gmalloc. Update.
+	* pathname.d: Update.
+	* spvw_sigsegv.d: Update.
+	* stream.d: Update.
+	* unix.d: Update.
+	* tests/path.tst: Update.
+	* tests/socket.tst: Update.
+	* tests/streams.tst: Update.
+	* unix/INSTALL: Update.
+	* utils/hardcode.c: Update.
+	* Makefile.devel (multibuild-hpux-*): Remove targets.
+	* configure: Stop recommending --with-gmalloc.
+
+2024-07-02  Bruno Haible  <bruno@clisp.org>
+
+	Remove support for IRIX.
+	* lispbibl.d (UNIX_IRIX): Remove macro.
+	* m4/mmap.m4 (CL_MMAP): Don't define HAVE_MMAP_DEVZERO.
+	* m4/fenv_default.m4 (CL_FENV_SIGNAL_INSTALL): Update.
+	* spvw.d: Update.
+	* spvw_mmap.d: Update.
+	* spvw_garcol.d: Update.
+	* spvw_garcol_old.d: Update.
+	* stream.d: Update.
+	* misc.d: Update.
+	* _clisp.c: Update.
+	* _README.de, _README.es: Update.
+	* makemake.in: Update.
+	* configure.in: Update.
+	* tests/socket.tst: Update.
+	* Makefile.devel (multibuild-irix-*): Remove targets.
+	* configure: Update.
+	* DEPENDENCIES: Update.
+
+2024-07-02  Bruno Haible  <bruno@clisp.org>
+
+	Remove support for OSF/1.
+	* lispbibl.d (UNIX_OSF): Remove macro.
+	* unix.d: Update.
+	* spvw_page.d: Update.
+	* spvw_sigsegv.d: Update.
+	* _clisp.c: Update.
+	* makemake.in: Update.
+
+2023-07-18  Bruno Haible  <bruno@clisp.org>
+
+	Fix a typo in an error message string.
+	Reported by Christian Wiatr <w9204-fs@yahoo.com>.
+	* defstruct.lisp (defstruct): Fix error message string.
+
+2023-07-15  Bruno Haible  <bruno@clisp.org>
+
+	Fix a typo in an error message string.
+	Reported by Christian Wiatr <w9204-fs@yahoo.com>.
+	* io.d (structure_reader): Fix error message string.
+
+2023-06-29  Bruno Haible  <bruno@clisp.org>
+
+	Update the installation instructions for Windows.
+	* INSTALL.windows: Add a note about MSYS2.
+
+2023-01-12  Bruno Haible  <bruno@clisp.org>
+
+	Allow non-simple strings in FORMAT and FORMATTER.
+	Reported by Vibhu Mohindra in
+	<https://gitlab.com/gnu-clisp/clisp/-/issues/37>.
+	* format.lisp (format-parse-cs): Use CHAR instead of SCHAR.
+
+2023-01-12  Bruno Haible  <bruno@clisp.org>
+
+	syscalls: Fix buffer overflow.
+	Reported by Jerry James <loganjerry@gmail.com>
+	in <https://gitlab.com/gnu-clisp/clisp/-/merge_requests/4>.
+	* modules/syscalls/calls.c (ENSURE_6X): Allocate one more byte.
+
+2022-12-28  Bruno Haible  <bruno@clisp.org>
+
+	Fix error when passing arguments with spaces to configure on Solaris 11.
+	* configure: Use "$@" instead of $*, to avoid splitting arguments that
+	contain spaces, e.g. "CPPFLAGS=-I/some/dir -Wall".
+
+2022-10-21  Bruno Haible  <bruno@clisp.org>
+
+	Fix a buffer overflow.
+	Reported by marxin at <https://gitlab.com/gnu-clisp/clisp/-/issues/33>.
+	* spvw_memfile.d (memfile_do_operation): Allocate one more byte for
+	filename_mem.
+
+2022-09-26  Bruno Haible  <bruno@clisp.org>
+
+	Recommend libsigsegv 2.14.
+	* configure (libsigsegv_url): Update to 2.14.
+	* INSTALL.windows: 64-bit Cygwin is now fully supported.
+
+2022-09-25  Bruno Haible  <bruno@clisp.org>
+
+	Fix a build error on Cygwin.
+	Reported by Vibhu Mohindra <vibs29@hotmail.com>.
+	* unix.d (CR): Push macro definition aside while including <windows.h>.
+
 2021-06-28  Bruno Haible  <bruno@clisp.org>
 
 	Enable most optimizations on macOS/arm64.

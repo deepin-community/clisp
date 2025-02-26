@@ -25,14 +25,14 @@ if test -n "${CONFIG_SHELL}"; then
   # if CONFIG_SHELL is bash, but /bin/sh is not, restart with bash
   if test -n "`${CONFIG_SHELL} --version 2>/dev/null | grep bash 2>/dev/null`"
   then # CONFIG_SHELL is bash
-    test -n "${BASH_VERSION}" || exec ${CONFIG_SHELL} $0 $*
+    test -n "${BASH_VERSION}" || exec ${CONFIG_SHELL} "$0" "$@"
   fi
 else
   CONFIG_SHELL=/bin/sh
 fi
 
 # Download location of the newest libsigsegv release.
-libsigsegv_url='https://ftp.gnu.org/gnu/libsigsegv/libsigsegv-2.12.tar.gz'
+libsigsegv_url='https://ftp.gnu.org/gnu/libsigsegv/libsigsegv-2.14.tar.gz'
 
 fail () { echo "$*" >&2; exit 1; }
 
@@ -99,7 +99,7 @@ options: The following options are recognized:
   --enable-portability  favour portability over optimization: disable
                         optimizations that could lead to build failures
   --with-gmalloc        use the GNU malloc instead of of the libc one
-                        (needed on HP-UX and OpenBSD)
+                        (needed on OpenBSD)
   --with-debug          if you will need to debug the C sources
   --edit-config         edit config.lisp with ${EDITOR:-vi} before make
                         (useful with --cbc)
@@ -709,7 +709,7 @@ Configure findings:
   libsigsegv: ${gl_cv_lib_sigsegv}
 EOF
 
-# The user can set MAKE. In particular, on IRIX, VPATH builds require GNU make.
+# The user can set MAKE. In particular, the user may prefer GNU make.
 if test -z "${MAKE}"; then
   MAKE=make
 fi

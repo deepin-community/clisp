@@ -1,6 +1,6 @@
 /*
  * Main include-file for CLISP
- * Bruno Haible 1990-2011, 2016-2018, 2020-2021
+ * Bruno Haible 1990-2011, 2016-2018, 2020-2024
  * Marcus Daniels 11.11.1994
  * Sam Steingold 1998-2012, 2016-2018
  * Vladimir Tzankov 2008-2012, 2017
@@ -202,7 +202,8 @@
  IA64 == the Intel IA-64 latecomer chip
  AMD64 == the AMD hammer chip
  S390 == the IBM S/390 processor
- RISCV64 == the 64-bit RISC-V processor family */
+ RISCV64 == the 64-bit RISC-V processor family
+ LOONGARCH64 == the 64-bit LoongArch processor */
   /* 32-bit processors: */
   #if defined(m68k) || defined(__m68k__)
     #define M68K
@@ -266,6 +267,9 @@
   #ifdef __ia64__
     #define IA64
   #endif
+  #ifdef __loongarch64
+    #define LOONGARCH64
+  #endif
 
 /* Selection of the operating system */
 #ifdef WIN32
@@ -292,25 +296,15 @@
   #ifdef __OpenBSD__
     #define UNIX_OPENBSD
   #endif
-  #if defined(hpux) || defined(__hpux)
-    #define UNIX_HPUX  /* HP-UX */
-  #endif
-  #if defined(SVR3) || defined(__SVR3) || defined(SVR4) || defined(__SVR4) || defined(SYSTYPE_SVR4) || defined(__SYSTYPE_SVR4) || defined(__svr4__) || defined(USG) || defined(UNIX_HPUX) /* ?? */
+  #if defined(SVR3) || defined(__SVR3) || defined(SVR4) || defined(__SVR4) || defined(SYSTYPE_SVR4) || defined(__SYSTYPE_SVR4) || defined(__svr4__) || defined(USG) /* ?? */
     #define UNIX_SYSV  /* UNIX System V */
   #endif
   #ifdef _AIX
     #define UNIX_AIX  /* IBM AIX */
   #endif
-  #ifdef __sgi
-    #define UNIX_IRIX /* SGI IRIX */
-  #endif
-  #ifdef __osf__
-    #define UNIX_OSF  /* OSF/1 */
-  #endif
   #if defined(__APPLE__) && defined(__MACH__)
     #define UNIX_MACOSX  /* MacOS X a.k.a. Darwin */
     /* MacOSX pathnames are UTF-8 strings, not byte sequences
-       http://thread.gmane.org/gmane.lisp.clisp.general/13725
        https://sourceforge.net/p/clisp/mailman/message/27345286/
        http://developer.apple.com/library/mac/#qa/qa2001/qa1173.html */
     #define CONSTANT_PATHNAME_ENCODING  Symbol_value(S(utf_8))
@@ -383,7 +377,6 @@
      * On ARM64, you can have long_bitsize = pointer_bitsize = 32.
        This is the so-called ilp32 ABI. It is advertised through the _ILP32
        predefined macro.
-     * On IA64 with HP-UX, there is an ilp32 ABI as well.
  */
 
 
@@ -393,13 +386,6 @@
 #endif
 #if defined(__sun)
   #define UNIX_SUNOS5  /* Sun OS Version 5.x (Solaris 2) */
-#endif
-
-/* On Linux/arm64, MALLOC_ADDRESS_RANGE comes out as a value < 1*2^32, but
-   for larger malloc()s, the address can be around 0x20*2^32 or 0x7F*2^32. */
-#if defined(UNIX_LINUX) && defined(ARM64)
-  #undef MALLOC_ADDRESS_RANGE
-  #define MALLOC_ADDRESS_RANGE STACK_ADDRESS_RANGE
 #endif
 
 
@@ -573,7 +559,7 @@
   #define C_CODE_ALIGNMENT  8
   #define log2_C_CODE_ALIGNMENT  3
 #endif
-#if (defined(I80386) && defined(GNU)) || defined(DECALPHA) || defined(SPARC) || defined(MIPS) || defined(POWERPC) || defined(ARM64) || defined(AMD64) || defined(__arc__) || defined(__bfin__) || defined(__TMS320C6X__) || defined(__epiphany__) || defined(__fr30__) || defined(__FT32__) || defined(__iq2000__) || defined(__lm32__) || defined(__M32R__) || defined(__m88k__) || defined(__MICROBLAZE__) || defined(__mmix__) || defined(__nds32__) || defined(__NIOS2__) || defined(__nvptx__) || defined(__VISIUM__) || defined(__xtensa__)
+#if (defined(I80386) && defined(GNU)) || defined(DECALPHA) || defined(SPARC) || defined(MIPS) || defined(POWERPC) || defined(ARM64) || defined(AMD64) || defined(LOONGARCH64) || defined(__arc__) || defined(__bfin__) || defined(__TMS320C6X__) || defined(__epiphany__) || defined(__fr30__) || defined(__FT32__) || defined(__iq2000__) || defined(__lm32__) || defined(__M32R__) || defined(__m88k__) || defined(__MICROBLAZE__) || defined(__mmix__) || defined(__nds32__) || defined(__NIOS2__) || defined(__nvptx__) || defined(__VISIUM__) || defined(__xtensa__)
   /* When using gcc on i386, this assumes that -malign-functions has not been
    used to specify an alignment smaller than 4 bytes. */
   #define C_CODE_ALIGNMENT  4
@@ -1139,24 +1125,6 @@
 
 #define MALLOC(size,type)   (type*)malloc((size)*sizeof(type))
 
-/* Literal constants of 64-bit integer types
- LL(nnnn)  = nnnn parsed as a sint64
- ULL(nnnn) = nnnn parsed as a uint64 */
-#if defined(HAVE_LONG_LONG_INT)
-  #define LL(nnnn) nnnn##LL
-  #define ULL(nnnn) nnnn##ULL
-#elif defined(MICROSOFT)
-  #define LL(nnnn) nnnn##i64
-  #define ULL(nnnn) nnnn##ui64
-#endif
-%% #if defined(HAVE_LONG_LONG_INT)
-%%   puts("#define LL(nnnn) nnnn##LL");
-%%   puts("#define ULL(nnnn) nnnn##ULL");
-%% #elif defined(MICROSOFT)
-%%   puts("#define LL(nnnn) nnnn##i64");
-%%   puts("#define ULL(nnnn) nnnn##ui64");
-%% #endif
-
 /* Synonyms for Byte, Word, Longword:
  SBYTE   = signed 8 bit integer
  UBYTE   = unsigned 8 bit int
@@ -1195,23 +1163,12 @@
 #if (long_bitsize==64) && !defined(UNIX_CYGWIN)
   typedef long           SLONGLONG;
   typedef unsigned long  ULONGLONG;
-  #ifndef HAVE_LONG_LONG_INT
-  #define HAVE_LONG_LONG_INT
-  #endif
 #elif defined(MICROSOFT)
   typedef __int64           SLONGLONG;
   typedef unsigned __int64  ULONGLONG;
-  #define HAVE_LONG_LONG_INT
-#elif defined(HAVE_LONG_LONG_INT)
- #if defined(long_long_bitsize) && (long_long_bitsize==64)
+#else
   typedef long long           SLONGLONG;
   typedef unsigned long long  ULONGLONG;
- #else /* useless type */
-  #undef HAVE_LONG_LONG_INT
- #endif
-#endif
-#if defined(WIDE) && !defined(HAVE_LONG_LONG_INT)
-  #error No 64 bit integer type? -- Which Integer-type has 64 Bit?
 #endif
 %% #ifdef __CHAR_UNSIGNED__
 %%   emit_typedef("signed char","SBYTE");
@@ -1234,7 +1191,7 @@
 %% #elif defined(MICROSOFT)
 %%   emit_typedef("__int64","SLONGLONG");
 %%   emit_typedef("unsigned __int64","ULONGLONG");
-%% #elif defined(HAVE_LONG_LONG_INT)
+%% #else
 %%   emit_typedef("long long","SLONGLONG");
 %%   emit_typedef("unsigned long long","ULONGLONG");
 %% #endif
@@ -1312,7 +1269,7 @@ typedef signed int  signean;
   /* Usually one would omit the array's limit */
   #define unspecified
 #else
-  /* However, HP-UX- and IRIX-compilers will only work with this: */
+  /* However, some old compilers will only work with this: */
   #define unspecified 1
 #endif
 %% export_def(unspecified);
@@ -1409,8 +1366,7 @@ typedef signed int  signean;
 %% #endif
 #if defined(UNIX) && defined(HAVE__JMP)
   /* The "_" routines are more efficient - do not save/restore signal masks,
-   see http://article.gmane.org/gmane.lisp.clisp.devel/18227
-   https://sourceforge.net/p/clisp/mailman/message/19448465/ */
+   see https://sourceforge.net/p/clisp/mailman/message/19448465/ */
   #undef setjmp
   #undef longjmp
   #define setjmp  _setjmp
@@ -1546,14 +1502,12 @@ typedef ULONG   uint31;  /* unsigned 31 bit Integer */
 typedef SLONG   sint31;  /* signed 31 bit Integer */
 typedef ULONG   uint32;  /* unsigned 32 bit Integer */
 typedef SLONG   sint32;  /* signed 32 bit Integer */
-#ifdef HAVE_LONG_LONG_INT
-  typedef ULONGLONG  uint33;  /* unsigned 33 bit Integer */
-  typedef SLONGLONG  sint33;  /* signed 33 bit Integer */
-  typedef ULONGLONG  uint48;  /* unsigned 48 bit Integer */
-  typedef SLONGLONG  sint48;  /* signed 48 bit Integer */
-  typedef ULONGLONG  uint64;  /* unsigned 64 bit Integer */
-  typedef SLONGLONG  sint64;  /* signed 64 bit Integer */
-#endif
+typedef ULONGLONG  uint33;  /* unsigned 33 bit Integer */
+typedef SLONGLONG  sint33;  /* signed 33 bit Integer */
+typedef ULONGLONG  uint48;  /* unsigned 48 bit Integer */
+typedef SLONGLONG  sint48;  /* signed 48 bit Integer */
+typedef ULONGLONG  uint64;  /* unsigned 64 bit Integer */
+typedef SLONGLONG  sint64;  /* signed 64 bit Integer */
 #define exact_uint_size_p(n) (((n)==char_bitsize)||((n)==short_bitsize)||((n)==int_bitsize)||((n)==long_bitsize))
 #define signed_int_with_n_bits(n) CONCAT(sint,n)
 #define unsigned_int_with_n_bits(n) CONCAT(uint,n)
@@ -1573,13 +1527,11 @@ typedef SLONG   sint32;  /* signed 32 bit Integer */
 %%     sprintf(buf,"uint%d",i); emit_typedef("ULONG",buf);
 %%     sprintf(buf,"sint%d",i); emit_typedef("SLONG",buf);
 %%   }
-%%   #ifdef HAVE_LONG_LONG_INT
-%%     for (i=33; i<=64; i++)
-%%       if ((i==33) || (i==48) || (i==64)) {
-%%         sprintf(buf,"uint%d",i); emit_typedef("ULONGLONG",buf);
-%%         sprintf(buf,"sint%d",i); emit_typedef("SLONGLONG",buf);
-%%       }
-%%   #endif
+%%   for (i=33; i<=64; i++)
+%%     if ((i==33) || (i==48) || (i==64)) {
+%%       sprintf(buf,"uint%d",i); emit_typedef("ULONGLONG",buf);
+%%       sprintf(buf,"sint%d",i); emit_typedef("SLONGLONG",buf);
+%%     }
 %% }
 
 /* 'uintX' and 'sintX' mean unsigned bzw. signed integer - types with
@@ -1610,12 +1562,6 @@ typedef SLONG   sint32;  /* signed 32 bit Integer */
   #define minus_bitQ(n)  (-(sintQ)1<<(n))
   /* Minus bit number n (0<n<=64) mod 2^64 */
   #define minus_bitQm(n)  (-(sintQ)2<<((n)-1))
-  typedef sintQ  sintL2;
-  typedef uintQ  uintL2;
-#else
-  /* Emulate 64-Bit-numbers using two 32-Bit-numbers. */
-  typedef struct { sintL hi; uintL lo; } sintL2; /* signed 64 Bit integer */
-  typedef struct { uintL hi; uintL lo; } uintL2; /* unsigned 64 Bit integer */
 #endif
 /* Use 'uintX' and 'sintX' for Integers with approximately given width
  and a minumum of storage space. */
@@ -1629,9 +1575,6 @@ typedef SLONG   sint32;  /* signed 32 bit Integer */
 %% #ifdef intQsize
 %%   sprintf(buf,"sint%d",intQsize); emit_typedef(buf,"sintQ");
 %%   sprintf(buf,"uint%d",intQsize); emit_typedef(buf,"uintQ");
-%% #else
-%%   emit_typedef("struct { sintL hi; uintL lo; }","sintL2");
-%%   emit_typedef("struct { uintL hi; uintL lo; }","uintL2");
 %% #endif
 %% #endif
 
@@ -1869,7 +1812,7 @@ typedef unsigned_int_with_n_bits(intBWLsize)  uintBWL;
 /* The arithmetics use "digit sequences" of "digits".
  They are unsigned ints with intDsize bits (should be =8 or =16 or =32).
  If  HAVE_DD: "double-digits" are unsigned ints with 2*intDsize<=32 bits. */
-#if 1 /* defined(M68K) || defined(I80386) || defined(SPARC) || defined(HPPA) || defined(MIPS) || defined(POWERPC) || defined(ARM) || defined(DECALPHA) || defined(IA64) || defined(AMD64) || defined(S390) || defined(RISCV64) || ... */
+#if 1 /* defined(M68K) || defined(I80386) || defined(SPARC) || defined(HPPA) || defined(MIPS) || defined(POWERPC) || defined(ARM) || defined(DECALPHA) || defined(IA64) || defined(AMD64) || defined(S390) || defined(RISCV64) || defined(LOONGARCH64) || ... */
   #define intDsize 32
   #define intDDsize 64  /* = 2*intDsize */
   #define log2_intDsize  5  /* = log2(intDsize) */
@@ -2378,13 +2321,15 @@ typedef enum {
     /* On Hurd/i386:
        MMAP_FIXED_ADDRESS_HIGHEST_BIT = 30
        CODE_ADDRESS_RANGE   = 0x00000000UL or 0x08000000UL
-       MALLOC_ADDRESS_RANGE = 0x08000000UL
+       MALLOC_ADDRESS_RANGE = 0x08000000UL or 0x10000000UL or 0x20000000UL
+       (after <https://sourceware.org/git/?p=glibc.git;a=commitdiff;h=8c6beab4>
+        and   <https://sourceware.org/git/?p=glibc.git;a=commitdiff;h=35cf8a85>)
        SHLIB_ADDRESS_RANGE  = 0x01000000UL
        STACK_ADDRESS_RANGE  = 0x01000000UL
        Addresses >= 0xC0000000UL are not mmapable.
-       There is room from 0x11000000UL to 0xBFFFFFFFUL, but let's keep some
+       There is room from 0x30000000UL to 0xBFFFFFFFUL, but let's keep some
        distance. */
-    #define MAPPABLE_ADDRESS_RANGE_START 0x18000000UL
+    #define MAPPABLE_ADDRESS_RANGE_START 0x40000000UL
     #define MAPPABLE_ADDRESS_RANGE_END   0xBFFFFFFFUL
   #endif
   #if (defined(__FreeBSD__) || defined(UNIX_GNU_FREEBSD)) && defined(I80386)
@@ -2514,52 +2459,6 @@ typedef enum {
     #define MAPPABLE_ADDRESS_RANGE_START 0x40000000UL
     #define MAPPABLE_ADDRESS_RANGE_END   0xCFFFFFFFUL
   #endif
-  #if defined(UNIX_HPUX) && defined(HPPA)
-    /* On HP-UX/hppa with 32-bit ABI:
-       CODE_ADDRESS_RANGE   = 0x40000000UL
-       MALLOC_ADDRESS_RANGE = 0x40000000UL
-       SHLIB_ADDRESS_RANGE  = 0x6F000000UL
-       STACK_ADDRESS_RANGE  = 0x6F000000UL
-       There is room from 0x70000000UL to 0xC0000000UL
-       and also      from 0x01000000UL to 0x40000000UL. */
-    #define MAPPABLE_ADDRESS_RANGE_START 0x70000000UL
-    #define MAPPABLE_ADDRESS_RANGE_END   0xBFFFFFFFUL
-  #endif
-  #if defined(UNIX_HPUX) && defined(IA64)
-    /* On HP-UX/ia64 with 32-bit ABI:
-       CODE_ADDRESS_RANGE   = 0x77000000UL
-       MALLOC_ADDRESS_RANGE = 0x40000000UL
-       SHLIB_ADDRESS_RANGE  = 0x77000000UL
-       STACK_ADDRESS_RANGE  = 0x7F000000UL
-       There is room from 0x05000000UL to 0x40000000UL
-       and also      from 0x41000000UL to 0x77000000UL
-       and also      from 0x80000000UL to 0xC0000000UL. */
-    #define MAPPABLE_ADDRESS_RANGE_START 0x80000000UL
-    #define MAPPABLE_ADDRESS_RANGE_END   0xBFFFFFFFUL
-  #endif
-  #if defined(UNIX_IRIX) && (defined(MIPS) || defined(MIPS64))
-   #if !(_MIPS_SIM == _ABIN32)
-    /* On IRIX 6.5 with o32 ABI:
-       MMAP_FIXED_ADDRESS_HIGHEST_BIT = 30
-       CODE_ADDRESS_RANGE   = 0x00000000UL
-       MALLOC_ADDRESS_RANGE = 0x10000000UL
-       SHLIB_ADDRESS_RANGE  = 0x0F000000UL
-       STACK_ADDRESS_RANGE  = 0x7F000000UL
-       There is room from 0x11000000UL to 0x5E800000UL. */
-    #define MAPPABLE_ADDRESS_RANGE_START 0x11000000UL
-    #define MAPPABLE_ADDRESS_RANGE_END   0x5E7FFFFFUL
-   #else
-    /* On IRIX 6.5 with n32 ABI:
-       MMAP_FIXED_ADDRESS_HIGHEST_BIT = 30
-       CODE_ADDRESS_RANGE   = 0x10000000UL
-       MALLOC_ADDRESS_RANGE = 0x10000000UL
-       SHLIB_ADDRESS_RANGE  = 0x0F000000UL
-       STACK_ADDRESS_RANGE  = 0x7F000000UL
-       There is room from 0x11000000UL to 0x5E800000UL. */
-    #define MAPPABLE_ADDRESS_RANGE_START 0x11000000UL
-    #define MAPPABLE_ADDRESS_RANGE_END   0x5E7FFFFFUL
-   #endif
-  #endif
   #if defined(UNIX_SUNOS5) && defined(I80386)
     /* On Solaris 10/x86_64 with 32-bit ABI:
        MMAP_FIXED_ADDRESS_HIGHEST_BIT = 30
@@ -2593,9 +2492,9 @@ typedef enum {
   #if defined(UNIX_HAIKU) && defined(I80386)
     /* On Haiku/i386:
        MMAP_FIXED_ADDRESS_HIGHEST_BIT = 30
-       CODE_ADDRESS_RANGE   = 0x00000000UL ... 0x02000000UL
+       CODE_ADDRESS_RANGE   = 0x00000000UL ... 0x03000000UL
        MALLOC_ADDRESS_RANGE = 0x18000000UL ... 0x19000000UL
-       SHLIB_ADDRESS_RANGE  = 0x00000000UL ... 0x02000000UL
+       SHLIB_ADDRESS_RANGE  = 0x00000000UL ... 0x03000000UL
        STACK_ADDRESS_RANGE  = 0x70000000UL ... 0x73000000UL
        There is room from 0x1A000000UL to 0x60000000UL, but let's keep some
        distance. */
@@ -2679,13 +2578,13 @@ typedef enum {
     /* On Linux/arm64:
        MMAP_FIXED_ADDRESS_HIGHEST_BIT = 38
        CODE_ADDRESS_RANGE   = 0x0000000000000000UL
-       MALLOC_ADDRESS_RANGE = 0x0000000009000000UL or 0x000000000E000000UL or 0x000000001E000000UL or 0x0000000021000000UL
+       MALLOC_ADDRESS_RANGE = 0x0000000009000000UL or 0x000000000E000000UL or 0x000000001E000000UL or 0x0000000021000000UL or 0x000000003A000000UL
        SHLIB_ADDRESS_RANGE  = 0x0000002000000000UL or 0x0000007F82000000UL
        STACK_ADDRESS_RANGE  = 0x0000007FC8000000UL or 0x0000007F7A000000UL or 0x0000007FF0000000UL or 0x0000007FFC000000UL
-       On Linux/arm64 build.opensuse.org or Debian build machines:
+       On Linux/arm64 (openSUSE) or Debian 12 machines:
        MMAP_FIXED_ADDRESS_HIGHEST_BIT = 47
        CODE_ADDRESS_RANGE   = 0x0000000000000000UL or 0x0000AAAAxx000000UL
-       MALLOC_ADDRESS_RANGE = 0x0000000000000000UL or 0x0000AAAAxx000000UL
+       MALLOC_ADDRESS_RANGE = 0x000000002C000000UL or 0x0000AAAAxx000000UL
        SHLIB_ADDRESS_RANGE  = 0x0000400000000000UL or 0x0000FFFFxx000000UL
        STACK_ADDRESS_RANGE  = 0x0000FFFFFF000000UL or 0x0000FFFFxx000000UL
        There is room from 0x002100000000UL to 0x007F00000000UL. */
@@ -2693,6 +2592,13 @@ typedef enum {
     #if (CODE_ADDRESS_RANGE == 0x0000000000000000UL || (CODE_ADDRESS_RANGE >= 0x0000AAAA00000000UL && CODE_ADDRESS_RANGE < 0x0000AAAB00000000UL))
       #undef CODE_ADDRESS_RANGE
       #define CODE_ADDRESS_RANGE 0x0000AAAAFF000000UL
+    #endif
+    /* In the first case, MALLOC_ADDRESS_RANGE comes out as a value < 1*2^32,
+       but for larger malloc()s, the address can be around 0x20*2^32 or
+       0x7F*2^32. */
+    #if MALLOC_ADDRESS_RANGE < 0x0000000100000000UL
+      #undef MALLOC_ADDRESS_RANGE
+      #define MALLOC_ADDRESS_RANGE STACK_ADDRESS_RANGE
     #endif
     #define MAPPABLE_ADDRESS_RANGE_START 0x002100000000UL
     #define MAPPABLE_ADDRESS_RANGE_END   0x007EFFFFFFFFUL
@@ -2722,6 +2628,18 @@ typedef enum {
     #define MAPPABLE_ADDRESS_RANGE_START 0x6000000100000000UL
     #define MAPPABLE_ADDRESS_RANGE_END   0x600007FEFFFFFFFFUL
   #endif
+  #if defined(UNIX_LINUX) && defined(LOONGARCH64)
+    /* On Linux/loongarch64:
+       MMAP_FIXED_ADDRESS_HIGHEST_BIT = 46
+       CODE_ADDRESS_RANGE   = 0x00005555xx000000UL
+       MALLOC_ADDRESS_RANGE = 0x00005555xx000000UL
+       SHLIB_ADDRESS_RANGE  = 0x00007FFFF2000000UL ... 0x00007FFFF3000000UL
+       STACK_ADDRESS_RANGE  = 0x00007FFFFB000000UL
+       There is room from 0x000100000000UL to 0x400000000000UL
+       and from 0x600000000000UL to 0x7F0000000000UL. */
+    #define MAPPABLE_ADDRESS_RANGE_START 0x000100000000UL
+    #define MAPPABLE_ADDRESS_RANGE_END   0x3FFFFFFFFFFFUL
+  #endif
   #if defined(UNIX_LINUX) && defined(MIPS64)
     /* On Linux/mips64eb and Linux/mips64el with 64-bit ABI:
        MMAP_FIXED_ADDRESS_HIGHEST_BIT = 39
@@ -2749,7 +2667,7 @@ typedef enum {
        MMAP_FIXED_ADDRESS_HIGHEST_BIT = 45
        CODE_ADDRESS_RANGE   = 0x0000000010000000UL or 0x0000000102000000UL or 0x0000000124000000UL
        MALLOC_ADDRESS_RANGE = 0x00000100xx000000UL
-       SHLIB_ADDRESS_RANGE  = 0x00003FFF79000000UL ... 0x00003FFFA0000000UL
+       SHLIB_ADDRESS_RANGE  = 0x00003FFF79000000UL ... 0x00003FFFA8000000UL
        STACK_ADDRESS_RANGE  = 0x00003FFFD1000000UL ... 0x00003FFFFF000000UL
        On some Linux/powerpc64 Debian build machines:
        MMAP_FIXED_ADDRESS_HIGHEST_BIT = 48
@@ -2757,6 +2675,12 @@ typedef enum {
        MALLOC_ADDRESS_RANGE = 0x00000100xx000000UL
        SHLIB_ADDRESS_RANGE  = 0x00007FFF82000000UL ... 0x00007FFFA4000000UL
        STACK_ADDRESS_RANGE  = 0x00007FFFD6000000UL ... 0x00007FFFE5000000UL
+       On Linux/powerpc64 and Linux/powerpc64le (openSUSE or Debian 12 or Alpine Linux):
+       MMAP_FIXED_ADDRESS_HIGHEST_BIT = 51
+       CODE_ADDRESS_RANGE   = 0x0000000010000000UL or 0x000000010E000000UL or 0x0000000113000000UL or 0x0000000137000000UL
+       MALLOC_ADDRESS_RANGE = 0x0000000162000000UL or 0x00000100xx000000UL or 0x00007FFFB6000000UL
+       SHLIB_ADDRESS_RANGE  = 0x00007FFF7E000000UL ... 0x00007FFFB2000000UL
+       STACK_ADDRESS_RANGE  = 0x00007FFFE6000000UL ... 0x00007FFFF9000000UL
        There is room from 0x011000000000UL to 0x3FF000000000UL. */
     /* Force the same CODE_ADDRESS_RANGE across platforms. */
     #if (CODE_ADDRESS_RANGE < 0x0000000200000000UL)
@@ -2778,26 +2702,37 @@ typedef enum {
     #define MAPPABLE_ADDRESS_RANGE_END   0x001FFFFFFFFFUL
   #endif
   #if defined(UNIX_LINUX) && defined(S390_64)
-    /* On Linux/s390x:
+    /* On Linux/s390x (Debian 8):
        MMAP_FIXED_ADDRESS_HIGHEST_BIT = 52
        CODE_ADDRESS_RANGE   = 0x0000000080000000UL or 0x0000000106000000UL or 0x0000000119000000UL
        MALLOC_ADDRESS_RANGE = 0x0000000081000000UL ... 0x00000000BE000000UL or 0x000000012x000000UL
        SHLIB_ADDRESS_RANGE  = 0x000003FF81000000UL ... 0x000003FFFD000000UL
        STACK_ADDRESS_RANGE  = 0x000003FFC2000000UL ... 0x000003FFFF000000UL
-       On Linux/s390x build.opensuse.org machines:
+       On Linux/s390x (openSUSE):
        MMAP_FIXED_ADDRESS_HIGHEST_BIT = 62
        CODE_ADDRESS_RANGE   = 0x0000000001000000UL
        MALLOC_ADDRESS_RANGE = 0x0000000001000000UL
-       SHLIB_ADDRESS_RANGE  = 0x0000020000000000UL
-       STACK_ADDRESS_RANGE  = 0x000003FFFF000000UL
-       There is room from 0x000200000000UL to 0x020000000000UL. */
+       SHLIB_ADDRESS_RANGE  = 0x0000020000000000UL or 0x000003FF8C000000UL
+       STACK_ADDRESS_RANGE  = 0x000003FFFA000000UL ... 0x000003FFFF000000UL
+       On Linux/s390x (Alpine Linux):
+       MMAP_FIXED_ADDRESS_HIGHEST_BIT = 62
+       CODE_ADDRESS_RANGE   = 0x000002AA1C000000UL
+       MALLOC_ADDRESS_RANGE = 0x000003FFB4000000UL
+       SHLIB_ADDRESS_RANGE  = 0x000003FF92000000UL
+       STACK_ADDRESS_RANGE  = 0x000003FFE9000000UL
+       There is room from 0x0000030000000000UL to 0x000003FF00000000UL
+       and from 0x0000040000000000UL to 0x0020000000000000UL. */
     /* Force the same CODE_ADDRESS_RANGE across platforms. */
-    #if (CODE_ADDRESS_RANGE < 0x0000000200000000UL)
+    #if (CODE_ADDRESS_RANGE < 0x0000030000000000UL)
       #undef CODE_ADDRESS_RANGE
-      #define CODE_ADDRESS_RANGE 0x00000001FF000000UL
+      #define CODE_ADDRESS_RANGE 0x000002FF00000000UL
     #endif
-    #define MAPPABLE_ADDRESS_RANGE_START 0x000200000000UL
-    #define MAPPABLE_ADDRESS_RANGE_END   0x01FFFFFFFFFFUL
+    #if 0
+      #define MAPPABLE_ADDRESS_RANGE_START 0x0000030000000000UL
+      #define MAPPABLE_ADDRESS_RANGE_END   0x000003FF00000000UL
+    #endif
+    #define MAPPABLE_ADDRESS_RANGE_START 0x0000040000000000UL
+    #define MAPPABLE_ADDRESS_RANGE_END   0x001FFFFFFFFFFFFFUL
   #endif
   #if defined(UNIX_LINUX) && defined(SPARC64)
     /* On Linux 3.2/sparc64:
@@ -2961,37 +2896,6 @@ typedef enum {
     #define MAPPABLE_ADDRESS_RANGE_START 0x0000000200000000UL
     #define MAPPABLE_ADDRESS_RANGE_END   0x07FFFFFFFFFFFFFFUL
   #endif
-  #if defined(UNIX_HPUX) && defined(HPPA64)
-    /* On HP-UX/hppa64:
-       CODE_ADDRESS_RANGE   = 0x4000000000000000UL
-       MALLOC_ADDRESS_RANGE = 0x8000000100000000UL
-       SHLIB_ADDRESS_RANGE  = 0x800003FFEF000000UL
-       STACK_ADDRESS_RANGE  = 0x800003FFEF000000UL
-       There is room from 0x4100000000000000UL to 0x8000000000000000UL. */
-    #define MAPPABLE_ADDRESS_RANGE_START 0x4100000000000000UL
-    #define MAPPABLE_ADDRESS_RANGE_END   0x7FFFFFFFFFFFFFFFUL
-  #endif
-  #if defined(UNIX_HPUX) && defined(IA64)
-    /* On HP-UX/ia64:
-       CODE_ADDRESS_RANGE   = 0x87FFFFFFEF000000UL
-       MALLOC_ADDRESS_RANGE = 0x6000000000000000UL
-       SHLIB_ADDRESS_RANGE  = 0x87FFFFFFEF000000UL
-       STACK_ADDRESS_RANGE  = 0x87FFFFFFFF000000UL
-       There is room from 0x6000000100000000UL to 0x8000000000000000UL. */
-    #define MAPPABLE_ADDRESS_RANGE_START 0x6000000100000000UL
-    #define MAPPABLE_ADDRESS_RANGE_END   0x7FFFFFFFFFFFFFFFUL
-  #endif
-  #if defined(UNIX_OSF) && defined(DECALPHA)
-    /* On OSF/1/alpha:
-       Ordinary pointers are in the range 1*2^32..2*2^32.
-       CODE_ADDRESS_RANGE   = 0x0000000120000000UL
-       MALLOC_ADDRESS_RANGE = 0x0000000140000000UL
-       SHLIB_ADDRESS_RANGE  = 0x000003FFC0000000UL
-       STACK_ADDRESS_RANGE  = ?
-       There is room from 0x000200000000UL to 0x03FF00000000UL. */
-    #define MAPPABLE_ADDRESS_RANGE_START 0x000200000000UL
-    #define MAPPABLE_ADDRESS_RANGE_END   0x03FF00000000UL
-  #endif
   #if defined(UNIX_SUNOS5) && defined(AMD64)
     /* On Solaris 10/x86_64:
        MMAP_FIXED_ADDRESS_HIGHEST_BIT = 46
@@ -3019,6 +2923,23 @@ typedef enum {
        There is room from 0x0000000200000000UL to 0x00007FFF00000000UL. */
     #define MAPPABLE_ADDRESS_RANGE_START 0x0000000200000000UL
     #define MAPPABLE_ADDRESS_RANGE_END   0x00007FFEFFFFFFFFUL
+  #endif
+  #if defined(UNIX_HAIKU) && defined(AMD64)
+    /* On Haiku/x86_64:
+       MMAP_FIXED_ADDRESS_HIGHEST_BIT = 46
+       CODE_ADDRESS_RANGE   = 0x0000000000000000UL ... 0x000001FF00000000UL
+       MALLOC_ADDRESS_RANGE = 0x0000100000000000UL ... 0x000012FF00000000UL
+       SHLIB_ADDRESS_RANGE  = 0x0000000000000000UL ... 0x000001FF00000000UL
+       STACK_ADDRESS_RANGE  = 0x00007F0000000000UL ... 0x00007FFF00000000UL
+       There is room from 0x0000130000000000UL to 0x00007F0000000000UL, but let's keep some
+       distance. */
+    /* Force the same CODE_ADDRESS_RANGE across platforms. */
+    #if (CODE_ADDRESS_RANGE >= 0x0000000000000000UL && CODE_ADDRESS_RANGE < 0x0000020000000000UL)
+      #undef CODE_ADDRESS_RANGE
+      #define CODE_ADDRESS_RANGE 0x000001FF00000000UL
+    #endif
+    #define MAPPABLE_ADDRESS_RANGE_START 0x0000200000000000UL
+    #define MAPPABLE_ADDRESS_RANGE_END   0x00006FFFFFFFFFFFUL
   #endif
   #if defined(UNIX_CYGWIN) && defined(AMD64)
     /* On Cygwin, running on Windows 10:
@@ -3452,48 +3373,6 @@ Long-Float, Ratio and Complex (only if SPVW_MIXED).
        consumes so many bits that we have at most 5+1 bits for the typecode. */
     #define SINGLEMAP_WORKS 0
   #endif
-  #if defined(UNIX_HPUX) && defined(HPPA) /* HP-UX/hppa with 32-bit ABI */
-    #define SINGLEMAP_ADDRESS_BASE 0UL
-    #define SINGLEMAP_TYPE_MASK    0x3F000000UL
-    #define SINGLEMAP_oint_type_shift 24
-    /* This configuration allocates memory outside the MAPPABLE_ADDRESS_RANGE. */
-    #define IGNORE_MAPPABLE_ADDRESS_RANGE
-    /* Does not work because mmap MAP_FIXED is not supported on this platform. */
-    #define SINGLEMAP_WORKS 0
-  #endif
-  #if defined(UNIX_HPUX) && defined(IA64) /* HP-UX/ia64 with 32-bit ABI */
-    #define SINGLEMAP_ADDRESS_BASE 0x40000000UL
-    #define SINGLEMAP_TYPE_MASK    0x3F000000UL
-    #define SINGLEMAP_oint_type_shift 24
-    /* Actually no such configuration works, because the CODE_ADDRESS_RANGE
-       consumes so many bits that we have at most 1+1 bits for the typecode. */
-    #define SINGLEMAP_WORKS 0
-  #endif
-  #if defined(UNIX_IRIX) && (defined(MIPS) || defined(MIPS64)) /* IRIX 6.5 with o32 or n32 ABI */
-    #if !(_MIPS_SIM == _ABIN32) /* IRIX 6.5 with o32 ABI */
-      #define SINGLEMAP_ADDRESS_BASE 0x10000000UL
-      #define SINGLEMAP_TYPE_MASK    0x6F000000UL
-      #define SINGLEMAP_oint_type_shift 24
-      /* This configuration allocates memory outside the MAPPABLE_ADDRESS_RANGE:
-         it conflicts with the system's use of the memory region at 0x5F800000UL.
-         This leads to
-         "Warning: reserving address range 0x5f000000...0x5fffffff that contains memory mappings. clisp might crash later!"
-         Later, we see an endless loop or a crash while compiling compiler.lisp. */
-      #define IGNORE_MAPPABLE_ADDRESS_RANGE
-      #define SINGLEMAP_WORKS 0
-    #else /* IRIX 6.5 with n32 ABI */
-      #define SINGLEMAP_ADDRESS_BASE 0x10000000UL
-      #define SINGLEMAP_TYPE_MASK    0x6F000000UL
-      #define SINGLEMAP_oint_type_shift 24
-      /* This configuration allocates memory outside the MAPPABLE_ADDRESS_RANGE:
-         it conflicts with the system's use of the memory region at 0x5F800000UL.
-         This leads to
-         "Warning: reserving address range 0x5f000000...0x5fffffff that contains memory mappings. clisp might crash later!"
-         Later, we see an endless loop or a crash while compiling compiler.lisp. */
-      #define IGNORE_MAPPABLE_ADDRESS_RANGE
-      #define SINGLEMAP_WORKS 0
-    #endif
-  #endif
   #if defined(UNIX_SUNOS5) && defined(I80386) /* Solaris/x86_64 with 32-bit ABI */
     #define SINGLEMAP_ADDRESS_BASE 0x08000000UL
     #define SINGLEMAP_TYPE_MASK    0x77000000UL
@@ -3585,6 +3464,15 @@ Long-Float, Ratio and Complex (only if SPVW_MIXED).
     #define SINGLEMAP_oint_type_shift 36
     #define SINGLEMAP_WORKS 1
   #endif
+  #if defined(UNIX_LINUX) && defined(LOONGARCH64) /* Linux/loongarch64 */
+    #define SINGLEMAP_ADDRESS_BASE 0UL
+    #define SINGLEMAP_TYPE_MASK    0x2AAA00000000UL
+    #define SINGLEMAP_oint_type_shift 33
+    /* This configuration does not work, because the assumption below, that
+       tint_type_mask has 6..7 bits and up to 3 "holes", is not fulfilled.
+       TB4 would not be defined with the current code. */
+    #define SINGLEMAP_WORKS 0
+  #endif
   #if defined(UNIX_LINUX) && defined(MIPS64) /* Linux/mips with 64-bit ABI */
     #define SINGLEMAP_ADDRESS_BASE 0x008000000000UL
     #define SINGLEMAP_TYPE_MASK    0x007E00000000UL
@@ -3607,8 +3495,8 @@ Long-Float, Ratio and Complex (only if SPVW_MIXED).
   #endif
   #if defined(UNIX_LINUX) && defined(S390_64) /* Linux/s390x */
     #define SINGLEMAP_ADDRESS_BASE 0UL
-    #define SINGLEMAP_TYPE_MASK    0x01FC00000000UL
-    #define SINGLEMAP_oint_type_shift 34
+    #define SINGLEMAP_TYPE_MASK    0x0001FC0000000000UL
+    #define SINGLEMAP_oint_type_shift 42
     #define SINGLEMAP_WORKS 1
   #endif
   #if defined(UNIX_LINUX) && defined(SPARC64) /* Linux/sparc64 */
@@ -3669,23 +3557,6 @@ Long-Float, Ratio and Complex (only if SPVW_MIXED).
     #define SINGLEMAP_oint_type_shift 52
     #define SINGLEMAP_WORKS 1
   #endif
-  #if defined(UNIX_HPUX) && defined(HPPA64) /* HP-UX/hppa64 */
-    #define SINGLEMAP_ADDRESS_BASE 0x5000000000000000UL
-    #define SINGLEMAP_TYPE_MASK    0x0FE0000000000000UL
-    #define SINGLEMAP_oint_type_shift 53
-    /* Set garcol_bit_o to 61. */
-    #define SINGLEMAP_garcol_bit_o 61
-    /* Does not work because mmap MAP_FIXED is not supported on this platform. */
-    #define SINGLEMAP_WORKS 0
-  #endif
-  #if defined(UNIX_HPUX) && defined(IA64) /* HP-UX/ia64 */
-    #define SINGLEMAP_ADDRESS_BASE 0x6000000000000000UL
-    #define SINGLEMAP_TYPE_MASK    0x1FC0000000000000UL
-    #define SINGLEMAP_oint_type_shift 54
-    /* Actually no such configuration works, because the CODE_ADDRESS_RANGE
-       consumes so many bits that we have at most 3+1 bits for the typecode. */
-    #define SINGLEMAP_WORKS 0
-  #endif
   #if defined(UNIX_SUNOS5) && defined(AMD64) /* Solaris/x86_64 */
     #define SINGLEMAP_ADDRESS_BASE 0UL
     #define SINGLEMAP_TYPE_MASK    0x00007F0000000000UL
@@ -3697,6 +3568,14 @@ Long-Float, Ratio and Complex (only if SPVW_MIXED).
     #define SINGLEMAP_TYPE_MASK    0x00007F0000000000UL
     #define SINGLEMAP_oint_type_shift 40
     #define SINGLEMAP_WORKS 1
+  #endif
+  #if defined(UNIX_HAIKU) && defined(AMD64) /* Haiku/x86_64 */
+    #define SINGLEMAP_ADDRESS_BASE 0x400000000000UL
+    #define SINGLEMAP_TYPE_MASK    0x1F8000000000UL
+    #define SINGLEMAP_oint_type_shift 39
+    /* Actually no such configuration works, because the CODE_ADDRESS_RANGE
+       consumes so many bits that we have at most 4+1 bits for the typecode. */
+    #define SINGLEMAP_WORKS 0
   #endif
   #if defined(UNIX_CYGWIN) && defined(AMD64) /* Cygwin */
     #define SINGLEMAP_ADDRESS_BASE 0UL
@@ -3783,8 +3662,7 @@ Long-Float, Ratio and Complex (only if SPVW_MIXED).
    an influence on oint_type_shift and oint_type_len.  */
 #if !defined(HEAPCODES)                                                        \
     && !defined(WIDE_SOFT)                                                     \
-    && (defined(HAVE_MMAP_ANON) || defined(HAVE_MMAP_DEVZERO)                  \
-        || defined(HAVE_MACH_VM) || defined(HAVE_WIN32_VM))                    \
+    && (defined(HAVE_MMAP_ANON) || defined(HAVE_WIN32_VM))                     \
     && !defined(NO_ADDRESS_SPACE_ASSUMPTIONS)                                  \
     && !defined(ADDRESS_RANGE_RANDOMIZED)                                      \
     && defined(WIDE_HARD)                                                      \
@@ -3821,14 +3699,13 @@ Long-Float, Ratio and Complex (only if SPVW_MIXED).
    (and, with it, TRIVIALMAP_MEMORY_STACK) constrain the addresses used for
    heap objects and for the stack and thus give more freedom for choosing
    oint_type_shift and oint_type_len.  */
-#if (defined(HAVE_MMAP_ANON) || defined(HAVE_MMAP_DEVZERO)                     \
-     || defined(HAVE_MACH_VM) || defined(HAVE_WIN32_VM))                       \
+#if (defined(HAVE_MMAP_ANON) || defined(HAVE_WIN32_VM))                        \
     && !defined(SINGLEMAP_MEMORY)                                              \
     && defined(MAPPABLE_ADDRESS_RANGE_START)                                   \
     && defined(MAPPABLE_ADDRESS_RANGE_END)                                     \
     && !defined(NO_ADDRESS_SPACE_ASSUMPTIONS)                                  \
     && !(defined(UNIX_LINUX) && defined(M68K) && (defined(HEAPCODES) || defined(ONE_FREE_BIT_HEAPCODES))) \
-    && !defined(UNIX_HAIKU)                                                    \
+    && !(defined(UNIX_HAIKU) && defined(I80386))                               \
     && !defined(UNIX_CYGWIN)                                                   \
     && !defined(NO_TRIVIALMAP)
   /* mmap() allows for a more flexible way of memory management than malloc().
@@ -3841,8 +3718,9 @@ Long-Float, Ratio and Complex (only if SPVW_MIXED).
      by mmapping the pages after it; but this might overwrite some small malloc
      regions that have been put there by the system.
      Also, it does not work on Linux/m68k when HEAPCODES is requested.
-     Also, it does not work well on Haiku, where it sometimes produces messages
-     such as "Cannot map memory to address 0x202a8000 ... Invalid Argument".
+     Also, it does not work well on Haiku/i386, where it sometimes produces
+     messages "Cannot map memory to address 0x202a8000 ... Invalid Argument",
+     when more than ca. 500-600 VMAs are in use.
      Also, it does not work well on Cygwin, where it sometimes produces messages
      "Cannot map memory to address ...". */
   #ifndef TRIVIALMAP_MEMORY
@@ -3895,14 +3773,14 @@ Long-Float, Ratio and Complex (only if SPVW_MIXED).
          - On platforms where compilers other than GCC (or clang, which is like
            GCC here) may be used, it is hard to fulfil the alignment constraint
            needed by HEAPCODES. Therefore favour TYPECODES on these platforms.
-           Except where TYPECODES does not work, namely on AIX, HP-UX/hppa64,
-           HP-UX/ia64, Solaris/x86_64 with cc, and Solaris/sparc64.
+           Except where TYPECODES does not work, namely on AIX, Solaris/x86_64
+           with cc, and Solaris/sparc64.
          - On platforms where we can assume GCC, both ONE_FREE_BIT_HEAPCODES and
            GENERIC64_HEAPCODES generally work well, with few exception. The
            choice between these two is done below. */
-      #if defined(UNIX_AIX) || defined(UNIX_HPUX) || defined(UNIX_IRIX) || defined(UNIX_SUNOS5)
+      #if defined(UNIX_AIX) || defined(UNIX_SUNOS5)
         /* A compiler other than GCC may be used. */
-        #if (defined(UNIX_AIX) && defined(POWERPC64)) || (defined(UNIX_HPUX) && defined(HPPA64)) || (defined(UNIX_HPUX) && defined(IA64)) || (defined(UNIX_SUNOS5) && defined(AMD64) && !defined(GNU)) || (defined(UNIX_SUNOS5) && defined(SPARC64))
+        #if (defined(UNIX_AIX) && defined(POWERPC64)) || (defined(UNIX_SUNOS5) && defined(AMD64) && !defined(GNU)) || (defined(UNIX_SUNOS5) && defined(SPARC64))
           /* On these platforms, TYPECODES (without SINGLEMAP_MEMORY) does not work. */
           #define HEAPCODES
         #else
@@ -3929,8 +3807,16 @@ Long-Float, Ratio and Complex (only if SPVW_MIXED).
 
 #if defined(GNU) && (SAFETY >= 3)
   /* Typechecking by the C-compiler */
-  #define OBJECT_STRUCT
-  #if !(defined(M68K) || defined(ARM)) && !(defined(__GNUG__) && (__GNUC__ == 3) && (__GNUC_MINOR__ == 3)) /* only if struct_alignment==1, and not with g++ 3.3 */
+  #if !(defined(__GNUC__) && !defined(__clang__) && !defined(__cplusplus) && __GNUC__ < 5)
+    /* not with gcc < 5 (due to "error: initializer element is not constant"
+       in fsubr.d, subr.d, constsym.d, constobj.d, and in the modules) */
+    #define OBJECT_STRUCT
+  #endif
+  #if !(defined(M68K) || defined(ARM)) && !(defined(__GNUC__) && !defined(__clang__) && !defined(__cplusplus) && __GNUC__ < 5) && !(defined(__GNUG__) && (__GNUC__ == 3) && (__GNUC_MINOR__ == 3))
+    /* only if struct_alignment==1,
+       and not with gcc < 5 (due to "error: initializer element is not constant"
+       in stream.d),
+       and not with g++ 3.3 */
     #define CHART_STRUCT
   #endif
 #endif
@@ -4091,7 +3977,7 @@ Long-Float, Ratio and Complex (only if SPVW_MIXED).
          known to not work. */
     #if !defined(WIDE_HARD)
       /* 32-bit platforms */
-      #if defined(UNIX_AIX) || defined(UNIX_HPUX) || defined(UNIX_IRIX) || defined(UNIX_SUNOS5)
+      #if defined(UNIX_AIX) || defined(UNIX_SUNOS5)
         /* A compiler other than GCC may be used. */
         #define ONE_FREE_BIT_HEAPCODES
       #elif (defined(UNIX_CYGWIN) && defined(I80386))
@@ -4105,9 +3991,6 @@ Long-Float, Ratio and Complex (only if SPVW_MIXED).
       #if defined(NO_ADDRESS_SPACE_ASSUMPTIONS)
         /* With GENERIC64_HEAPCODES we don't need to make assumptions about the
            address range. */
-        #define GENERIC64_HEAPCODES
-      #elif (defined(UNIX_LINUX) && defined(S390_64))
-        /* On these platforms, ONE_FREE_BIT_HEAPCODES does not generally work. */
         #define GENERIC64_HEAPCODES
       #else
         /* The general case. */
@@ -4252,25 +4135,6 @@ Long-Float, Ratio and Complex (only if SPVW_MIXED).
         #define HEAPCODES1BIT_WITH_TRIVIALMAP_WORKS 1
         #define HEAPCODES1BIT_WITH_MALLOC_WORKS 1
       #endif
-      #if defined(UNIX_HPUX) && defined(HPPA) /* HP-UX/hppa with 32-bit ABI */
-        /* Does not work because mmap MAP_FIXED is not supported on this platform. */
-        #define HEAPCODES1BIT_WITH_TRIVIALMAP_WORKS 0
-        #define HEAPCODES1BIT_WITH_MALLOC_WORKS 1
-      #endif
-      #if defined(UNIX_HPUX) && defined(IA64) /* HP-UX/ia64 with 32-bit ABI */
-        /* Does not work because mmap MAP_FIXED is not supported on this platform. */
-        #define HEAPCODES1BIT_WITH_TRIVIALMAP_WORKS 0
-        #define HEAPCODES1BIT_WITH_MALLOC_WORKS 1
-      #endif
-      #if defined(UNIX_IRIX) && (defined(MIPS) || defined(MIPS64)) /* IRIX 6.5 with o32 or n32 ABI */
-        #if !(_MIPS_SIM == _ABIN32) /* IRIX 6.5 with o32 ABI */
-          #define HEAPCODES1BIT_WITH_TRIVIALMAP_WORKS 1
-          #define HEAPCODES1BIT_WITH_MALLOC_WORKS 1
-        #else /* IRIX 6.5 with n32 ABI */
-          #define HEAPCODES1BIT_WITH_TRIVIALMAP_WORKS 1
-          #define HEAPCODES1BIT_WITH_MALLOC_WORKS 1
-        #endif
-      #endif
       #if defined(UNIX_SUNOS5) && defined(I80386) /* Solaris/x86_64 with 32-bit ABI */
         #define HEAPCODES1BIT_WITH_TRIVIALMAP_WORKS 1
         #define HEAPCODES1BIT_WITH_MALLOC_WORKS 1
@@ -4328,6 +4192,10 @@ Long-Float, Ratio and Complex (only if SPVW_MIXED).
         #define HEAPCODES1BIT_WITH_TRIVIALMAP_WORKS 1
         #define HEAPCODES1BIT_WITH_MALLOC_WORKS 1
       #endif
+      #if defined(UNIX_LINUX) && defined(LOONGARCH64) /* Linux/loongarch64 */
+        #define HEAPCODES1BIT_WITH_TRIVIALMAP_WORKS 1
+        #define HEAPCODES1BIT_WITH_MALLOC_WORKS 1
+      #endif
       #if defined(UNIX_LINUX) && defined(MIPS64) /* Linux/mips with 64-bit ABI */
         #define HEAPCODES1BIT_WITH_TRIVIALMAP_WORKS 1
         #define HEAPCODES1BIT_WITH_MALLOC_WORKS 1
@@ -4341,8 +4209,8 @@ Long-Float, Ratio and Complex (only if SPVW_MIXED).
         #define HEAPCODES1BIT_WITH_MALLOC_WORKS 1
       #endif
       #if defined(UNIX_LINUX) && defined(S390_64) /* Linux/s390x */
-        #define HEAPCODES1BIT_WITH_TRIVIALMAP_WORKS 1 /* but only with(!) GENERATIONAL_GC */
-        #define HEAPCODES1BIT_WITH_MALLOC_WORKS 0
+        #define HEAPCODES1BIT_WITH_TRIVIALMAP_WORKS 1
+        #define HEAPCODES1BIT_WITH_MALLOC_WORKS 1
       #endif
       #if defined(UNIX_LINUX) && defined(SPARC64) /* Linux/sparc64 */
         #define HEAPCODES1BIT_WITH_TRIVIALMAP_WORKS 1
@@ -4387,28 +4255,6 @@ Long-Float, Ratio and Complex (only if SPVW_MIXED).
       #endif
       #if defined(UNIX_AIX) && defined(POWERPC64) /* AIX/POWER with 64-bit ABI */
         #define HEAPCODES1BIT_WITH_TRIVIALMAP_WORKS 1
-        #define HEAPCODES1BIT_WITH_MALLOC_WORKS 1
-      #endif
-      #if defined(UNIX_HPUX) && defined(HPPA64) /* HP-UX/hppa64 */
-        /* Does not work because mmap MAP_FIXED is not supported on this platform. */
-        #define HEAPCODES1BIT_WITH_TRIVIALMAP_WORKS 0
-        #if !defined(TRIVIALMAP_MEMORY)
-          /* Avoid error
-             "STACK range (around 0x8000000100060980) contains the bit used to identify frames"
-             and error
-             "Wrong choice of garcol_bit_o: it conflicts with CODE_ADDRESS_RANGE!" */
-          #define garcol_bit_o 61
-        #endif
-        #define HEAPCODES1BIT_WITH_MALLOC_WORKS 1
-      #endif
-      #if defined(UNIX_HPUX) && defined(IA64) /* HP-UX/ia64 */
-        /* Does not work because mmap MAP_FIXED is not supported on this platform. */
-        #define HEAPCODES1BIT_WITH_TRIVIALMAP_WORKS 0
-        #if !defined(TRIVIALMAP_MEMORY)
-          /* Avoid error
-             "Return value of malloc() = 6000000000069490 is not compatible with the choice of garcol_bit_o." */
-          #define garcol_bit_o 60
-        #endif
         #define HEAPCODES1BIT_WITH_MALLOC_WORKS 1
       #endif
       #if defined(UNIX_SUNOS5) && defined(AMD64) /* Solaris/x86_64 */
@@ -4599,22 +4445,6 @@ Long-Float, Ratio and Complex (only if SPVW_MIXED).
     #if defined(UNIX_AIX) && defined(POWERPC) /* AIX/POWER with 32-bit ABI */
       #define KERNELVOID32_HEAPCODES_WORKS 1 /* 1 with gcc, 0 with xlc */
     #endif
-    #if defined(UNIX_HPUX) && defined(HPPA) /* HP-UX/hppa with 32-bit ABI */
-      #define KERNELVOID32_HEAPCODES_WORKS 1
-    #endif
-    #if defined(UNIX_HPUX) && defined(IA64) /* HP-UX/ia64 with 32-bit ABI */
-      /* The 64-bit alignment of the 'uint64' and 'double' types causes
-         alignment issues within strm_buffered_extrafields_t and Dfloat,
-         which lead to SIGBUS. */
-      #define KERNELVOID32_HEAPCODES_WORKS 0
-    #endif
-    #if defined(UNIX_IRIX) && (defined(MIPS) || defined(MIPS64)) /* IRIX 6.5 with o32 or n32 ABI */
-      #if !(_MIPS_SIM == _ABIN32) /* IRIX 6.5 with o32 ABI */
-        #define KERNELVOID32_HEAPCODES_WORKS 0
-      #else /* IRIX 6.5 with n32 ABI */
-        #define KERNELVOID32_HEAPCODES_WORKS 0
-      #endif
-    #endif
     #if defined(UNIX_SUNOS5) && defined(I80386) /* Solaris/x86_64 with 32-bit ABI */
       #define KERNELVOID32_HEAPCODES_WORKS 1
     #endif
@@ -4720,6 +4550,9 @@ Long-Float, Ratio and Complex (only if SPVW_MIXED).
     #if defined(UNIX_LINUX) && defined(IA64) /* Linux/ia64 */
       #define GENERIC64C_HEAPCODES_WORKS 1
     #endif
+    #if defined(UNIX_LINUX) && defined(LOONGARCH64) /* Linux/loongarch64 */
+      #define GENERIC64C_HEAPCODES_WORKS 1
+    #endif
     #if defined(UNIX_LINUX) && defined(MIPS64) /* Linux/mips with 64-bit ABI */
       #define GENERIC64C_HEAPCODES_WORKS 1
     #endif
@@ -4757,12 +4590,6 @@ Long-Float, Ratio and Complex (only if SPVW_MIXED).
     #if defined(UNIX_AIX) && defined(POWERPC64) /* AIX/POWER with 64-bit ABI */
       #define GENERIC64C_HEAPCODES_WORKS 1
     #endif
-    #if defined(UNIX_HPUX) && defined(HPPA64) /* HP-UX/hppa64 */
-      #define GENERIC64C_HEAPCODES_WORKS 1
-    #endif
-    #if defined(UNIX_HPUX) && defined(IA64) /* HP-UX/ia64 */
-      #define GENERIC64C_HEAPCODES_WORKS 1
-    #endif
     #if defined(UNIX_SUNOS5) && defined(AMD64) /* Solaris/x86_64 */
       #define GENERIC64C_HEAPCODES_WORKS 1 /* 1 with gcc, 0 with cc */
       #define GENERIC64B_HEAPCODES_WORKS 1
@@ -4795,26 +4622,26 @@ Long-Float, Ratio and Complex (only if SPVW_MIXED).
          Bits 63..48 = type code, Bits 47..32 = zero, Bits 31..0 = address */
       #define oint_type_shift 48
       #define oint_type_len 16
-      #define oint_type_mask ULL(0xFFFF000000000000)
+      #define oint_type_mask 0xFFFF000000000000ULL
       #define oint_addr_shift 0
       #define oint_addr_len 48
-      #define oint_addr_mask ULL(0x0000FFFFFFFFFFFF)
+      #define oint_addr_mask 0x0000FFFFFFFFFFFFULL
     #elif WIDE_ENDIANNESS
       /* Bits 63..32 = type code, Bits 31..0 = address */
       #define oint_type_shift 32
       #define oint_type_len 32
-      #define oint_type_mask ULL(0xFFFFFFFF00000000)
+      #define oint_type_mask 0xFFFFFFFF00000000ULL
       #define oint_addr_shift 0
       #define oint_addr_len 32
-      #define oint_addr_mask ULL(0x00000000FFFFFFFF)
+      #define oint_addr_mask 0x00000000FFFFFFFFULL
     #else /* conversely it is a little slower: */
       /* Bits 63..32 = address, Bits 31..0 = type code */
       #define oint_type_shift 0
       #define oint_type_len 32
-      #define oint_type_mask ULL(0x00000000FFFFFFFF)
+      #define oint_type_mask 0x00000000FFFFFFFFULL
       #define oint_addr_shift 32
       #define oint_addr_len 32
-      #define oint_addr_mask ULL(0xFFFFFFFF00000000)
+      #define oint_addr_mask 0xFFFFFFFF00000000ULL
     #endif
   #else
     /* oint == uintP.
@@ -4957,22 +4784,6 @@ Long-Float, Ratio and Complex (only if SPVW_MIXED).
             #define MAPPABLE_ADDRESS_RANGE_START 0x00010000UL
             #error No way to accommodate 7 type bits, because of CODE_ADDRESS_RANGE.
           #endif
-          #if defined(UNIX_HPUX) && defined(HPPA) /* HP-UX/hppa with 32-bit ABI */
-            /* Does not work because mmap MAP_FIXED is not supported on this platform. */
-            #define TYPECODES_WITH_TRIVIALMAP_WORKS 0
-          #endif
-          #if defined(UNIX_HPUX) && defined(IA64) /* HP-UX/ia64 with 32-bit ABI */
-            /* Does not work because mmap MAP_FIXED is not supported on this platform. */
-            #define TYPECODES_WITH_TRIVIALMAP_WORKS 0
-          #endif
-          #if defined(UNIX_IRIX) && (defined(MIPS) || defined(MIPS64)) /* IRIX 6.5 with o32 or n32 ABI */
-            #if !(_MIPS_SIM == _ABIN32) /* IRIX 6.5 with o32 ABI */
-              #define MAPPABLE_ADDRESS_RANGE_START 0x08000000UL /* or 0x01000000UL or 0x02000000UL or 0x04000000UL or 0x20000000UL or 0x40000000UL */
-              #define TYPECODES_WITH_TRIVIALMAP_WORKS 0
-            #else /* IRIX 6.5 with n32 ABI */
-              #define TYPECODES_WITH_TRIVIALMAP_WORKS 0
-            #endif
-          #endif
           #if defined(UNIX_SUNOS5) && defined(I80386) /* Solaris/x86_64 with 32-bit ABI */
             #define TYPECODES_WITH_TRIVIALMAP_WORKS 0
           #endif
@@ -5020,6 +4831,9 @@ Long-Float, Ratio and Complex (only if SPVW_MIXED).
             #define oint_type_shift 53
             #define garcol_bit_o 60
             #define oint_addr_mask 0xE01FFFFFFFFFFFFFUL
+            #define TYPECODES_WITH_TRIVIALMAP_WORKS 1
+          #endif
+          #if defined(UNIX_LINUX) && defined(LOONGARCH64) /* Linux/loongarch64 */
             #define TYPECODES_WITH_TRIVIALMAP_WORKS 1
           #endif
           #if defined(UNIX_LINUX) && defined(MIPS64) /* Linux/mips with 64-bit ABI */
@@ -5072,14 +4886,6 @@ Long-Float, Ratio and Complex (only if SPVW_MIXED).
             #define MAPPABLE_ADDRESS_RANGE_END 0x00FFFFFFFFFFFFFFUL
             #define TYPECODES_WITH_TRIVIALMAP_WORKS 0
           #endif
-          #if defined(UNIX_HPUX) && defined(HPPA64) /* HP-UX/hppa64 */
-            /* Does not work because mmap MAP_FIXED is not supported on this platform. */
-            #define TYPECODES_WITH_TRIVIALMAP_WORKS 0
-          #endif
-          #if defined(UNIX_HPUX) && defined(IA64) /* HP-UX/ia64 */
-            /* Does not work because mmap MAP_FIXED is not supported on this platform. */
-            #define TYPECODES_WITH_TRIVIALMAP_WORKS 0
-          #endif
           #if defined(UNIX_SUNOS5) && defined(AMD64) /* Solaris/x86_64 */
             #define TYPECODES_WITH_TRIVIALMAP_WORKS 1
           #endif
@@ -5114,26 +4920,6 @@ Long-Float, Ratio and Complex (only if SPVW_MIXED).
          */
         #if !defined(WIDE_HARD)
           /* 32-bit platforms */
-          #if defined(UNIX_HPUX) && defined(HPPA) /* HP-UX/hppa with 32-bit ABI */
-            #define oint_type_shift 24
-            #define oint_type_len 8
-            #define oint_type_mask 0xBF000000UL
-            #define oint_addr_shift 0
-            #define oint_addr_len 24
-            #define oint_addr_mask 0x40FFFFFFUL
-            /* typecodes-spvw_pure_pages works, the other two crash. */
-            #define TYPECODES_WITH_MALLOC_WORKS 0
-          #endif
-          #if defined(UNIX_HPUX) && defined(IA64) /* HP-UX/ia64 with 32-bit ABI */
-            #define oint_type_shift 24
-            #define oint_type_len 8
-            #define oint_type_mask 0xBF000000UL
-            #define oint_addr_shift 0
-            #define oint_addr_len 24
-            #define oint_addr_mask 0x40FFFFFFUL
-            #error No way to accommodate 7 type bits, because of CODE_ADDRESS_RANGE.
-            #define TYPECODES_WITH_MALLOC_WORKS 0
-          #endif
           /* It is not worth testing these configurations without TRIVIALMAP_MEMORY.
              Most of them would fail when starting lisp.run, with the error
              "Return value of malloc() = ... is not compatible with type code distribution." */
@@ -5157,6 +4943,9 @@ Long-Float, Ratio and Complex (only if SPVW_MIXED).
             #define garcol_bit_o 60
             #define oint_addr_mask 0xE01FFFFFFFFFFFFFUL
             #define TYPECODES_WITH_MALLOC_WORKS 0
+          #endif
+          #if defined(UNIX_LINUX) && defined(LOONGARCH64) /* Linux/loongarch64 */
+            #define TYPECODES_WITH_MALLOC_WORKS 1
           #endif
           #if defined(UNIX_LINUX) && defined(MIPS64) /* Linux/mips with 64-bit ABI */
             #define TYPECODES_WITH_MALLOC_WORKS 1
@@ -5205,19 +4994,6 @@ Long-Float, Ratio and Complex (only if SPVW_MIXED).
           #endif
           #if defined(UNIX_AIX) && defined(POWERPC64) /* AIX/POWER with 64-bit ABI */
             #define TYPECODES_WITH_MALLOC_WORKS 0
-          #endif
-          #if defined(UNIX_HPUX) && defined(HPPA64) /* HP-UX/hppa64 */
-            #define oint_type_shift 53
-            #define oint_type_len 9
-            #define oint_addr_mask 0xC01FFFFFFFFFFFFFUL
-            #define garcol_bit_o 60
-            /* Crashes mentioning #<ADDRESS #x80000001000402A0>, which is indeed an
-               address without typecode. cc apparently miscompiles some use of the
-               type_pointer_object macro, even when no optimization is enabled. */
-            #define TYPECODES_WITH_MALLOC_WORKS 0
-          #endif
-          #if defined(UNIX_HPUX) && defined(IA64) /* HP-UX/ia64 */
-            #error No way to accommodate 7 type bits, because of CODE_ADDRESS_RANGE.
           #endif
           #if defined(UNIX_SUNOS5) && defined(AMD64) /* Solaris/x86_64 */
             #define TYPECODES_WITH_MALLOC_WORKS 1
@@ -5400,6 +5176,9 @@ typedef signed_int_with_n_bits(intVsize)  sintV;
        !defined(UNIX_NETBSD)                                                  \
     && /* It does not work in QEMU user-mode. */                              \
        !((defined(UNIX_LINUX) && defined(HPPA)) || (defined(UNIX_LINUX) && defined(M68K))) \
+    && /* On Haiku, it causes a 20% slowdown in the benchmarks, instead of    \
+          a speedup. */                                                       \
+       !defined(UNIX_HAIKU)                                                   \
     && /* Generational GC is tricky stuff. Turn it off at safety 3. */        \
        (SAFETY < 3)                                                           \
     && /* The user can also turn off generational GC explicitly. */           \
@@ -5556,10 +5335,10 @@ typedef signed_int_with_n_bits(intVsize)  sintV;
 /* Bit operations on entities of type uintV:
  ...vbit... instead of ...bit..., "v" = "value". */
 #if (intVsize > 32)
-  #define vbit(n)  (LL(1)<<(n))
-  #define vbitm(n)  (LL(2)<<((n)-1))
+  #define vbit(n)  (1LL<<(n))
+  #define vbitm(n)  (2LL<<((n)-1))
   #define vbit_test(x,n)  ((x) & vbit(n))
-  #define minus_vbit(n)  (-LL(1)<<(n))
+  #define minus_vbit(n)  (-1LL<<(n))
 #else
   #define vbit  bit
   #define vbitm  bitm
@@ -5576,10 +5355,10 @@ typedef signed_int_with_n_bits(intVsize)  sintV;
 /* Bit operations on entities of type oint:
  ...wbit... instead of ...bit..., "w" = "wide". */
 #if defined(WIDE_SOFT)
-  #define wbit(n)  (LL(1)<<(n))
-  #define wbitm(n)  (LL(2)<<((n)-1))
+  #define wbit(n)  (1LL<<(n))
+  #define wbitm(n)  (2LL<<((n)-1))
   #define wbit_test(x,n)  ((x) & wbit(n))
-  #define minus_wbit(n)  (-LL(1)<<(n))
+  #define minus_wbit(n)  (-1LL<<(n))
 #else
   #define wbit  bit
   #define wbitm  bitm
@@ -6227,7 +6006,7 @@ typedef signed_int_with_n_bits(intVsize)  sintV;
 #if defined(I80386) || defined(POWERPC) || defined(ARM) || defined(S390)
   #define varobject_alignment  4
 #endif
-#if defined(SPARC) || defined(HPPA) || defined(MIPS) || defined(DECALPHA) || defined(IA64) || defined(AMD64) || defined(ARM64) || defined(RISCV64)
+#if defined(SPARC) || defined(HPPA) || defined(MIPS) || defined(DECALPHA) || defined(IA64) || defined(AMD64) || defined(ARM64) || defined(RISCV64) || defined(LOONGARCH64)
   #define varobject_alignment  8
 #endif
 #if (!defined(TYPECODES) || defined(GENERATIONAL_GC)) && (varobject_alignment < 4)
@@ -6515,11 +6294,6 @@ typedef signed_int_with_n_bits(intVsize)  sintV;
    But this doesn't mean we have to change the type code distribution. */
 #endif
 
-#if defined(DECALPHA) && defined(UNIX_OSF) && !(defined(NO_SINGLEMAP) || defined(NO_TRIVIALMAP))
-/* mmap() only works with addresses >=0, <2^38, but since ordinary pointers are in the range
- 1*2^32..2*2^32, only the Bits 37..33 remain as type-bits. */
-#endif
-
 #if defined(SPARC64) && defined(UNIX_LINUX)
   /* At 0x70000000 there are shared libraries located.
    But this doesn't mean we have to change the type code distribution. */
@@ -6702,11 +6476,7 @@ typedef signed_int_with_n_bits(intVsize)  sintV;
  bits before one accesses the address */
 #define addressbus_mask  hardware_addressbus_mask
 #ifdef SINGLEMAP_MEMORY
-  #if defined(DECALPHA) && defined(UNIX_OSF)
-    /* Memory-mapping makes the bits 39..33 of an address redundant now. */
-    #undef addressbus_mask
-    #define addressbus_mask  0xFFFFFF01FFFFFFFFUL
-  #elif !defined(WIDE_SOFT)
+  #if !defined(WIDE_SOFT)
     /* Memory-mapping makes the bits 31..24 of an address redundant now. */
     #undef addressbus_mask
     #define addressbus_mask  oint_addr_mask  /* most of the time it's = 0x00FFFFFFUL */
@@ -6889,10 +6659,9 @@ typedef signed_int_with_n_bits(intVsize)  sintV;
  http://gcc.gnu.org/bugzilla/show_bug.cgi?id=12615
  g++ 3.4 similarly: http://gcc.gnu.org/bugzilla/show_bug.cgi?id=15180)
  g++ 4.8 on 32-bit AIX/PowerPC produces code with invalid displacements.
- HP C on 64-bit HPPA in TYPECODES mode omits the type in references to NIL.
  With DEBUG_GCSAFETY, the initialization of symbol_tab_data crashes in
  nonimmprobe. */
-#if !(defined(WIDE_SOFT) && !defined(WIDE_STRUCT)) && !(defined(__GNUG__) && (__GNUC__ == 3) && (__GNUC_MINOR__ == 3 || __GNUC_MINOR__ == 4) && defined(OBJECT_STRUCT)) && !(defined(__GNUG__) && defined(UNIX_AIX) && defined(POWERPC)) && !(defined(UNIX_HPUX) && defined(HPPA64) && defined(TYPECODES) && !defined(GNU)) && !(defined(DEBUG_GCSAFETY) && defined(SINGLEMAP_MEMORY))
+#if !(defined(WIDE_SOFT) && !defined(WIDE_STRUCT)) && !(defined(__GNUG__) && (__GNUC__ == 3) && (__GNUC_MINOR__ == 3 || __GNUC_MINOR__ == 4) && defined(OBJECT_STRUCT)) && !(defined(__GNUG__) && defined(UNIX_AIX) && defined(POWERPC)) && !(defined(DEBUG_GCSAFETY) && defined(SINGLEMAP_MEMORY))
   #define INIT_SYMBOL_TAB
 #endif
 /* When changed: nothing to do */
@@ -11678,7 +11447,7 @@ typedef struct {
   internal_time_t realtime;
   internal_time_t gctime;
   uintL gccount;
-  uintL2 gcfreed;
+  uint64 gcfreed;
 } timescore_t;
 extern void get_running_times (timescore_t*);
 /* is used by TIME */
@@ -11838,6 +11607,9 @@ All other long words on the LISP-Stack are LISP-objects.
   #ifdef RISCV64
     #define SP_register "sp"
   #endif
+  #ifdef LOONGARCH64
+    #define SP_register "$sp"
+  #endif
 #endif
 #if (defined(GNU) || defined(INTEL)) && !defined(NO_ASM)
   /* Assembler-instruction that copies the SP-register into a variable. */
@@ -11887,6 +11659,9 @@ All other long words on the LISP-Stack are LISP-objects.
   #endif
   #ifdef RISCV64
     #define ASM_get_SP_register(resultvar)  ("mv %0,sp" : "=r" (resultvar) : )
+  #endif
+  #ifdef LOONGARCH64
+    #define ASM_get_SP_register(resultvar)  ("move %0,$sp" : "=r" (resultvar) : )
   #endif
 #endif
 #if defined(GNU) && defined(M68K) && !defined(NO_ASM)
@@ -11944,7 +11719,7 @@ All other long words on the LISP-Stack are LISP-objects.
   extern void* getSP (void);
   #define NEED_OWN_GETSP
 #endif
-#if defined(stack_grows_down) /* defined(M68K) || defined(I80386) || defined(SPARC) || defined(MIPS) || defined(DECALPHA) || defined(IA64) || defined(AMD64) || defined(S390) || defined(RISCV64) || ... */
+#if defined(stack_grows_down) /* defined(M68K) || defined(I80386) || defined(SPARC) || defined(MIPS) || defined(DECALPHA) || defined(IA64) || defined(AMD64) || defined(S390) || defined(RISCV64) || defined(LOONGARCH64) || ... */
   #define SP_DOWN /* SP grows downward */
   #define SPoffset 0 /* top-of-SP ist *(SP+SPoffset) */
 #endif
@@ -12606,7 +12381,7 @@ extern maygc void gar_col (int level);
 
 /* GC-statistics */
 extern uintL gc_count;
-extern uintL2 gc_space;
+extern uint64 gc_space;
 extern internal_time_t gc_time;
 /* is used by TIME */
 
@@ -18575,16 +18350,8 @@ extern maygc struct timeval * sec_usec (object sec, object usec, struct timeval 
 /* Convert C sec/usec (struct timeval et al) pair into Lisp number (of seconds)
  if abs_p is true, add UNIX_LISP_TIME_DIFF
  can trigger GC */
-#if defined(SIZEOF_STRUCT_TIMEVAL) && SIZEOF_STRUCT_TIMEVAL == 16
-global maygc object sec_usec_number (uint64 sec, uint64 usec, bool abs_p);
-#else
-global maygc object sec_usec_number (uint32 sec, uint32 usec, bool abs_p);
-#endif
-%% #if defined(SIZEOF_STRUCT_TIMEVAL) && SIZEOF_STRUCT_TIMEVAL == 16
-%% exportF(object,sec_usec_number,(uint64 sec, uint64 usec, bool abs_p));
-%% #else
-%% exportF(object,sec_usec_number,(uint32 sec, uint32 usec, bool abs_p));
-%% #endif
+global maygc object sec_usec_number (sint64 sec, uint32 usec, bool abs_p);
+%% exportF(object,sec_usec_number,(sint64 sec, uint32 usec, bool abs_p));
 
 /* UP: Initializes the OS dependencies for streams.
  init_stream_osdeps(); */
@@ -19259,18 +19026,14 @@ extern maygc object L_to_I (sint32 val);
 %%   exportF(object,UL2_to_I,(uint32 val_hi, uint32 val_lo));
 %% #endif
 
-#if defined(intQsize) || (intVsize>32)
-  /* Converts a quadword into an Integer.
-   Q_to_I(val)
-   > val: value of the Integer, a signed 64-bit-Integer.
-   < result: Integer with that value
-   can trigger GC */
-  extern maygc object Q_to_I (sint64 val);
-  /* is used by the FFI */
-#endif
-%% #if defined(intQsize) || (intVsize>32)
-%%   exportF(object,Q_to_I,(sint64 val));
-%% #endif
+/* Converts a quadword into an Integer.
+ Q_to_I(val)
+ > val: value of the Integer, a signed 64-bit-Integer.
+ < result: Integer with that value
+ can trigger GC */
+extern maygc object Q_to_I (sint64 val);
+/* is used by TIME and by the FFI */
+%% exportF(object,Q_to_I,(sint64 val));
 
 #if defined(intQsize) || (intVsize>32) || defined(WIDE_HARD) || (SIZEOF_OFF_T > 4) || (SIZEOF_INO_T > 4)
   /* Converts an unsigned quadword into an Integer >=0.
@@ -19407,29 +19170,21 @@ extern sintL I_to_L (object obj);
 /* is used by */
 %% exportF(sintL,I_to_L,(object obj));
 
-#if defined(HAVE_LONG_LONG_INT)
-  /* Converts an Integer >=0 into an unsigned quadword.
-   I_to_UQ(obj)
-   > obj: an object, should be an Integer >=0, <2^64
-   < result: the Integer's vaulue as unsigned quadword */
-  extern uint64 I_to_UQ (object obj);
-  /* used by FOREIGN, for FFI, and by modules */
-#endif
-%% #ifdef HAVE_LONG_LONG_INT
-%%   exportF(uint64,I_to_UQ,(object obj));
-%% #endif
+/* Converts an Integer >=0 into an unsigned quadword.
+ I_to_UQ(obj)
+ > obj: an object, should be an Integer >=0, <2^64
+ < result: the Integer's vaulue as unsigned quadword */
+extern uint64 I_to_UQ (object obj);
+/* used by FOREIGN, for FFI, and by modules */
+%% exportF(uint64,I_to_UQ,(object obj));
 
-#if defined(HAVE_LONG_LONG_INT)
-  /* Converts an Integer into a signed quadword.
-   I_to_Q(obj)
-   > obj: an object, should be an Integer >=-2^63, <2^63
-   < result: the Integer's value as quadword. */
-  extern sint64 I_to_Q (object obj);
-  /* used by FOREIGN, for FFI, and by modules */
-#endif
-%% #ifdef HAVE_LONG_LONG_INT
-%%   exportF(sint64,I_to_Q,(object obj));
-%% #endif
+/* Converts an Integer into a signed quadword.
+ I_to_Q(obj)
+ > obj: an object, should be an Integer >=-2^63, <2^63
+ < result: the Integer's value as quadword. */
+extern sint64 I_to_Q (object obj);
+/* used by TIME, FOREIGN, for FFI, and by modules */
+%% exportF(sint64,I_to_Q,(object obj));
 
 /* Converts an Integer into a C-Integer of a given type.
  I_to_xintyy(obj) assumes that xintyy_p(obj) has already been checked. */
@@ -19447,10 +19202,8 @@ extern sintL I_to_L (object obj);
 #else
   #define I_to_sint32(obj)  I_to_L(obj)
 #endif
-#ifdef HAVE_LONG_LONG_INT
-  #define I_to_uint64(obj)  I_to_UQ(obj)
-  #define I_to_sint64(obj)  I_to_Q(obj)
-#endif
+#define I_to_uint64(obj)  I_to_UQ(obj)
+#define I_to_sint64(obj)  I_to_Q(obj)
 #if (int_bitsize==16)
   #define I_to_uint  I_to_uint16
   #define I_to_sint  I_to_sint16

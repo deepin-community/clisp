@@ -1,0 +1,10 @@
+--- clisp.orig/tests/socket.tst
++++ clisp/tests/socket.tst
+@@ -658,6 +658,7 @@
+         (t '("0.0.0.0" "127.0.0.1" "0.0.0.0" "127.0.0.1")))
+ 
+ ;; Test writing to and reading from a socket after it has encountered ECONNRESET.
++#+nil #+nil
+ (multiple-value-bind (run args) (cmd-args)
+   ;; Open a socket server.
+   (let ((se (socket:socket-server)))

@@ -1,4 +1,6 @@
 remove-webbugs.patch
 config.patch
-pari-2.15.patch
-0001-skip-ut.patch
+test-fixes.patch
+hurd-i386-test-fix.patch
+sparc64-fix.patch
+disable-flakey-test.patch

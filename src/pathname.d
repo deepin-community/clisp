@@ -1,6 +1,6 @@
 /*
  * Pathnames for CLISP
- * Bruno Haible 1990-2013, 2016-2018, 2020
+ * Bruno Haible 1990-2024
  * Logical Pathnames: Marcus Daniels 16.9.1994
  * ANSI compliance, bugs: Sam Steingold 1998-2013, 2016-2017
  * German comments translated into English: Stefan Kain 2002-01-03
@@ -7086,8 +7086,7 @@ local maygc object direntry_to_string (char* string, volatile int len) {
  < returns the size in bytes needed for struct dirent buffer
 
  This code does not trust values of NAME_MAX that are less than
- 255, since some systems (including at least HP-UX) incorrectly
- define it to be a smaller value.
+ 255, since some systems incorrectly define it to be a smaller value.
  If you use autoconf, include fpathconf and dirfd in your
  AC_CHECK_FUNCS list.  Otherwise use some other method to detect
  and use them where available. */
@@ -8182,8 +8181,7 @@ LISPFUN(execute,seclass_default,1,0,rest,nokey,0,NIL)
          /bin/sh is a symlink to busybox, so RUN-PROGRAM which calls SHELL
          which calls EXECUTE fails because EXECUTE calls "busybox -c"
          instead of "/bin/sh -c".
-         <https://sourceforge.net/p/clisp/mailman/message/24434416/>
-         <http://article.gmane.org/gmane.lisp.clisp.devel/21219> */
+         <https://sourceforge.net/p/clisp/mailman/message/24434416/> */
       /* convert thet file to string, existence is checked by execv(2): */
       *file_ = physical_namestring(*file_);
       *file_ = string_to_asciz(*file_,O(misc_encoding));

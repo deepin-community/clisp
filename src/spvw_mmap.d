@@ -1,6 +1,6 @@
 /* Memory mapping support. */
 
-#if defined(HAVE_MMAP_ANON) || defined(HAVE_MMAP_DEVZERO) || defined(HAVE_MACH_VM) || defined(HAVE_WIN32_VM)
+#if defined(HAVE_MMAP_ANON) || defined(HAVE_WIN32_VM)
 
 /* -------------------------- Specification ---------------------------- */
 
@@ -41,12 +41,12 @@ local void* mmap_filemap (void* map_addr, uintM map_len, int fd, off_t offset);
 #endif
 
 /* Unmaps a memory range. */
-#if defined(HAVE_MACH_VM) || defined(HAVE_WIN32_VM)
+#if defined(HAVE_WIN32_VM)
 global int munmap (void* addr, size_t len);
 #endif
 
 /* Changes the access protection for a memory range. */
-#if defined(HAVE_MACH_VM) || defined(HAVE_WIN32_VM)
+#if defined(HAVE_WIN32_VM)
 global int mprotect (void* addr, size_t len, int prot);
 #endif
 
@@ -194,92 +194,6 @@ local void warn_before_reserving_range (uintP map_addr, uintP map_endaddr)
 
 #else
 #define warn_before_reserving_range(map_addr,map_endaddr)
-#endif
-
-/* -------------------- Implementation for Mac OS X -------------------- */
-
-#if defined(HAVE_MACH_VM)
-
-local void mmap_init_pagesize (void)
-{
-  system_pagesize = vm_page_size;
-  mmap_pagesize = system_pagesize;
-}
-
-#define mmap_init()  0
-
-local int mmap_prepare (uintP* map_addr, uintP* map_endaddr, bool shrinkp)
-{
-  /* Warn before reserving an address range that contains existing memory
-     mappings. We don't actually shrink the range [*map_addr,*map_endaddr)
-     here. */
-  warn_before_reserving_range(*map_addr,*map_endaddr);
-  return 0;
-}
-
-local int mmap_zeromap (void* map_addr, uintM map_len)
-{
-  var int errcode;
-  switch (vm_allocate(task_self(), (vm_address_t*) &map_addr, map_len, false)) {
-    case KERN_SUCCESS:
-      return 0;
-    case KERN_NO_SPACE:
-      errcode = ENOMEM;
-      break;
-    case KERN_INVALID_ADDRESS:
-    default:
-      errcode = EINVAL;
-      break;
-  }
-  fprintf(stderr,GETTEXTL("Cannot map memory to address 0x%lx ."),map_addr);
-  errno_out(errcode);
-  return -1;                  /* error */
-}
-
-local void* mmap_filemap (void* map_addr, uintM map_len, int fd, off_t offset)
-{
-  switch (vm_allocate(task_self(), (vm_address_t*) &map_addr, map_len, false)) {
-    case KERN_SUCCESS:
-      break;
-    default:
-      errno = EINVAL; return (void*)(-1);
-  }
-  switch (map_fd(fd, offset, (vm_address_t*) &map_addr, 0, map_len)) {
-    case KERN_SUCCESS:
-      return map_addr;
-    case KERN_INVALID_ADDRESS:
-    case KERN_INVALID_ARGUMENT:
-    default:
-      errno = EINVAL; return (void*)(-1);
-  }
-}
-
-/* We need to implement munmap() ourselves. */
-global int munmap (void* addr, size_t len)
-{
-  switch (vm_deallocate(task_self(),addr,len)) {
-    case KERN_SUCCESS:
-      return 0;
-    case KERN_INVALID_ADDRESS:
-    default:
-      errno = EINVAL; return -1;
-  }
-}
-
-/* We need to implement mprotect() ourselves. */
-global int mprotect (void* addr, size_t len, int prot)
-{
-  switch (vm_protect(task_self(),addr,len,0,prot)) {
-    case KERN_SUCCESS:
-      return 0;
-    case KERN_PROTECTION_FAILURE:
-      errno = EACCES; return -1;
-    case KERN_INVALID_ADDRESS:
-    default:
-      errno = EINVAL; return -1;
-  }
-}
-
 #endif
 
 /* -------------------- Implementation for Windows --------------------- */
@@ -436,28 +350,7 @@ global int mprotect (void* addr, size_t len, int prot)
 
 /* -------------- Implementation for Unix except Mac OS X -------------- */
 
-#if defined(HAVE_MMAP_ANON) || defined(HAVE_MMAP_DEVZERO)
-
-/* We don't need both mmap() methods. One is sufficient. */
-#ifdef HAVE_MMAP_ANON
-  #undef HAVE_MMAP_DEVZERO
-#endif
-
-#ifdef HAVE_MMAP_DEVZERO
-local int mmap_zero_fd;       /* open handle for /dev/zero */
-  /* How to access /dev/zero: Sometimes /dev/zero has permissions 0644.
-   Therefore we can OPEN() it only with O_RDONLY instead of O_RDWR.
-   Therefore, in the mmap() call, we use MAP_PRIVATE instead of MAP_SHARED. */
-  #ifdef MAP_FILE
-    #define map_flags  MAP_FILE | MAP_PRIVATE
-  #else
-    #define map_flags  MAP_PRIVATE
-  #endif
-#endif
-#ifdef HAVE_MMAP_ANON
-  #define mmap_zero_fd  -1      /* any invalid handles works! */
-  #define map_flags  MAP_ANON | MAP_PRIVATE
-#endif
+#if defined(HAVE_MMAP_ANON)
 
 local void mmap_init_pagesize (void)
 {
@@ -480,18 +373,6 @@ local void mmap_init_pagesize (void)
 
 local int mmap_init (void)
 {
- #ifdef HAVE_MMAP_DEVZERO
-  {
-    var int fd = OPEN("/dev/zero",O_RDONLY,my_open_mask);
-    if (fd<0) {
-      var int errcode = errno;
-      fprintf(stderr,GETTEXTL("Cannot open <%s>."),"/dev/zero");
-      errno_out(errcode);
-      return -1; /* error */
-    }
-    mmap_zero_fd = fd;
-  }
- #endif
   mincore_init();
   return 0;
 }
@@ -517,8 +398,8 @@ local int mmap_zeromap (void* map_addr, uintM map_len)
   if ( (void*) mmap((void*)map_addr, /* desired address */
                     map_len, /* length */
                     PROT_READ_WRITE, /* access rights */
-                    map_flags | MAP_FIXED, /* exactly at this address! */
-                    mmap_zero_fd, 0) /* put empty pages */
+                    MAP_ANON | MAP_PRIVATE | MAP_FIXED, /* exactly at this address! */
+                    -1, 0) /* put empty pages */
        == (void*)(-1)) {
     var int errcode = errno;
     fprintf(stderr,GETTEXTL("Cannot map memory to address 0x%lx ."),

@@ -1,7 +1,7 @@
 /*
  * system calls
  * Copyright (C) 2003-2012,2016-2017 Sam Steingold
- * Copyright (C) 2005,2008,2017-2020 Bruno Haible
+ * Copyright (C) 2005,2008,2017-2024 Bruno Haible
  * Copyright (C) 2005,2010 Arseny Slobodyuk
  * This is Free Software, distributed under the GNU GPL v2+
  */
@@ -158,7 +158,6 @@ DEFMODULE(syscalls,"POSIX")
 /* we use posix fcntl() on unix and win32 LockFileEx() on win32.
    since cygwin supports fcntl(), we use it there, but another option
    would be to use cygwin get_osfhandle() + win32 LockFileEx(), see
-   http://article.gmane.org/gmane.os.cygwin/35175
    https://cygwin.com/ml/cygwin/2003-08/msg00588.html */
 
 /* ============================== aux ============================== */
@@ -677,7 +676,7 @@ DEFUN(OS:VERSION>=, string1 string2){VALUES_IF(string_version_compare() >= 0);}
       && name[name##_bytelen-6]=='X') {                 \
     c_template = name;                                  \
   } else {                                              \
-    c_template = (char*)alloca(name##_bytelen+6);       \
+    c_template = (char*)alloca(name##_bytelen+6+1);     \
     strcpy(c_template,name);                            \
     strcat(c_template,"XXXXXX");                        \
   }
@@ -1309,8 +1308,7 @@ DEFUN(POSIX::WAIT, &key :PID :USAGE :NOHANG :UNTRACED :STOPPED :EXITED \
   skipSTACK(2);
 }
 
-/* http://article.gmane.org/gmane.lisp.clisp.devel/20422
-   https://sourceforge.net/p/clisp/mailman/message/23010926/
+/* https://sourceforge.net/p/clisp/mailman/message/23010926/
    https://sourceforge.net/p/clisp/bugs/593/ */
 DEFUN(POSIX::BEGIN-SUBPROCESSES,) {
     begin_system_call();
@@ -1920,9 +1918,9 @@ static void file_stat_to_STACK (object file, const struct stat *ps) {
   pushSTACK(NIL);
 #endif
   /* cannot use convert_time_to_universal() because this is used on win32 */
-  pushSTACK(UL_to_I(ps->st_atime+UNIX_LISP_TIME_DIFF));/*time of last access*/
-  pushSTACK(UL_to_I(ps->st_mtime+UNIX_LISP_TIME_DIFF));/*last modification*/
-  pushSTACK(UL_to_I(ps->st_ctime+UNIX_LISP_TIME_DIFF));/*time of last change*/
+  pushSTACK(Q_to_I((sint64)(ps->st_atime)+UNIX_LISP_TIME_DIFF));/*time of last access*/
+  pushSTACK(Q_to_I((sint64)(ps->st_mtime)+UNIX_LISP_TIME_DIFF));/*last modification*/
+  pushSTACK(Q_to_I((sint64)(ps->st_ctime)+UNIX_LISP_TIME_DIFF));/*time of last change*/
 }
 
 DEFUN(POSIX::FILE-STAT, file &optional linkp)

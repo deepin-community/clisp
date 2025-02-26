@@ -46,9 +46,7 @@ coerce-byte-array
                    (equal os "Minix"))
                49)
               ((equal os "AIX") 68)
-              ((or (equal os "HP-UX") (and (equal os "Linux") (eql (search "parisc" cpu) 0)))
-               227)
-              ((equal os "IRIX") 236)
+              ((and (equal os "Linux") (eql (search "parisc" cpu) 0)) 227)
               ((or (equal os "SunOS") (and (equal os "Linux") (eql (search "mips" cpu) 0)))
                126)
               ((equal os "Linux") 99)
@@ -65,9 +63,7 @@ coerce-byte-array
                    (equal os "Minix"))
                54)
               ((equal os "AIX") 73)
-              ((or (equal os "HP-UX") (and (equal os "Linux") (eql (search "parisc" cpu) 0)))
-               232)
-              ((equal os "IRIX") 131)
+              ((and (equal os "Linux") (eql (search "parisc" cpu) 0)) 232)
               ((or (equal os "SunOS") (and (equal os "Linux") (eql (search "mips" cpu) 0)))
                131)
               ((equal os "Linux") 104)
@@ -84,9 +80,7 @@ coerce-byte-array
                    (equal os "Minix"))
                61)
               ((equal os "AIX") 79)
-              ((or (equal os "HP-UX") (and (equal os "Linux") (eql (search "parisc" cpu) 0)))
-               239)
-              ((equal os "IRIX") 146)
+              ((and (equal os "Linux") (eql (search "parisc" cpu) 0)) 239)
               ((or (equal os "SunOS") (and (equal os "Linux") (eql (search "mips" cpu) 0)))
                146)
               ((equal os "Linux") 111)
@@ -103,9 +97,7 @@ coerce-byte-array
                    (equal os "Minix"))
                60)
               ((equal os "AIX") 78)
-              ((or (equal os "HP-UX") (and (equal os "Linux") (eql (search "parisc" cpu) 0)))
-               238)
-              ((equal os "IRIX") 145)
+              ((and (equal os "Linux") (eql (search "parisc" cpu) 0)) 238)
               ((or (equal os "SunOS") (and (equal os "Linux") (eql (search "mips" cpu) 0)))
                145)
               ((equal os "Linux") 110)
@@ -614,7 +606,6 @@ T
 
 ;; no one should be listening on 12345
 ;; https://sourceforge.net/p/clisp/bugs/482/
-;; http://article.gmane.org/gmane.lisp.clisp.general/12286
 ;; https://sourceforge.net/p/clisp/mailman/message/19641749/
 (check-os-error (socket:socket-connect 12345 "localhost" :timeout 30)
   #.(let ((os (ext:operating-system-type)))
