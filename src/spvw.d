@@ -1,6 +1,6 @@
 /*
  * (SPVW = Speicherverwaltung): Memory Management for CLISP
- * Bruno Haible 1990-2011, 2016-2018
+ * Bruno Haible 1990-2011, 2016-2024
  * Sam Steingold 1998-2013, 2016-2017
  * German comments translated into English: Stefan Kain 2002-03-24
 
@@ -267,7 +267,7 @@ local void dump_process_memory_map (FILE* out)
 local int mappable_address_range_check (void)
 {
   var int exitcode = 0;
-#if defined(HAVE_MMAP_ANON) || defined(HAVE_MMAP_DEVZERO) || defined(HAVE_MACH_VM) || defined(HAVE_WIN32_VM)
+#if defined(HAVE_MMAP_ANON) || defined(HAVE_WIN32_VM)
  #if defined(MAPPABLE_ADDRESS_RANGE_START) && defined(MAPPABLE_ADDRESS_RANGE_END)
   var const uintL count = 256;
   var uintL i;
@@ -2217,20 +2217,19 @@ local void arg_error (const char *error_message, const char *arg) {
 /* print license */
 local _Noreturn void print_license (void) {
   local const char * const license [] = {
-    PACKAGE_NAME " is free software; you can redistribute and/or modify it\n",
-    "under the terms of the GNU General Public License as published by\n",
-    "the Free Software Foundation; either version 2, or (at your option)\n",
-    "any later version.\n",
+    PACKAGE_NAME " is free software: you can redistribute it and/or modify\n",
+    "it under the terms of the GNU General Public License as published\n",
+    "by the Free Software Foundation; either version 2 of the License,\n",
+    "or (at your option) any later version.\n",
     "\n",
     PACKAGE_NAME " is distributed in the hope that it will be useful,\n",
     "but WITHOUT ANY WARRANTY; without even the implied warranty of\n",
-    "MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n",
-    "See the GNU General Public License for more details.\n",
+    "MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n",
+    "GNU General Public License for more details.\n",
     "\n",
     "You should have received a copy of the GNU General Public License\n",
-    "along with " PACKAGE_NAME ", see file GNU-GPL.\n",
-    "If not, write to the Free Software Foundation, Inc.,\n",
-    "51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.\n",
+    "along with " PACKAGE_NAME ", in the file GNU-GPL.  If not, see\n",
+    "<https://www.gnu.org/licenses/>.\n",
     "\n",
     "Distribution of Lisp programs meant to run in " PACKAGE_NAME "\n",
     "without sources is possible under certain conditions.\n",
@@ -3098,7 +3097,7 @@ local inline int init_memory (struct argv_initparams *p) {
   }
   /* fetch memory: */
   begin_system_call();
- #if (defined(SINGLEMAP_MEMORY) || defined(TRIVIALMAP_MEMORY) || defined(MULTITHREAD)) && (defined(HAVE_MMAP_ANON) || defined(HAVE_MMAP_DEVZERO) || defined(HAVE_MACH_VM) || defined(HAVE_WIN32_VM))
+ #if (defined(SINGLEMAP_MEMORY) || defined(TRIVIALMAP_MEMORY) || defined(MULTITHREAD)) && (defined(HAVE_MMAP_ANON) || defined(HAVE_WIN32_VM))
   mmap_init_pagesize();
  #endif
  #if defined(SINGLEMAP_MEMORY) || defined(TRIVIALMAP_MEMORY)
@@ -3237,13 +3236,6 @@ local inline int init_memory (struct argv_initparams *p) {
           var Heap* heapptr = &mem.heaps[heapnr];
           var uintP heap_start_addr = (uintP)(type_zero_oint(heapnr)+SINGLEMAP_ADDRESS_BASE);
           var uintP heap_end_addr = (uintP)(type_zero_oint(heapnr+1)+SINGLEMAP_ADDRESS_BASE);
-         #if defined(UNIX_IRIX) && (defined(MIPS) || defined(MIPS64))
-          /* Avoid "Warning: reserving address range 0x5f000000...0x5fffffff that contains memory mappings."
-             and   "Warning: reserving address range 0x5e000000...0x5effffff that contains memory mappings." */
-          if (heap_end_addr == 0x60000000UL || heap_end_addr == 0x5F000000UL) {
-            heap_end_addr -= 0x800000UL;
-          }
-         #endif
           heapptr->heap_limit = heap_start_addr;
           heapptr->heap_hardlimit = heap_end_addr;
           if (mem.heaptype[heapnr] >= -1) {

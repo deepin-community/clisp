@@ -1,15 +1,66 @@
-clisp (1:2.49.20210628.gitde01f0f-3.1deepin1) unstable; urgency=medium
+clisp (1:2.49.20241123.git9ff8aed-1) unstable; urgency=medium
 
-  * Skip ut.
+  * New upstream version 2.49.20241123.git9ff8aed
+  * Refreshed patches
 
- -- xiangzelong <xiangzelong@deepin.org>  Thu, 29 Aug 2024 17:14:56 +0800
+ -- Peter Van Eynde <pvaneynd@debian.org>  Wed, 04 Dec 2024 18:41:27 +0100
 
-clisp (1:2.49.20210628.gitde01f0f-3.1) unstable; urgency=medium
+clisp (1:2.49.20241118.gitfaa3b6b-2) unstable; urgency=medium
 
-  * Non-maintainer upload.
-  * Drop clisp-module-pcre. (Closes: #1000089)
+  * Upload to unstable.
 
- -- Bastian Germann <bage@debian.org>  Fri, 18 Aug 2023 16:39:51 +0000
+ -- Peter Van Eynde <pvaneynd@debian.org>  Fri, 22 Nov 2024 07:53:26 +0100
+
+clisp (1:2.49.20241118.gitfaa3b6b-1) experimental; urgency=medium
+
+  * New upstream version 2.49.20241118.gitfaa3b6b
+  * Just disable the flakey socket test
+  * Depend on updated ffcall 2.25. (Closes: 1061414)
+
+ -- Peter Van Eynde <pvaneynd@debian.org>  Wed, 20 Nov 2024 08:56:43 +0100
+
+clisp (1:2.49.20241117.git2640aef-2) unstable; urgency=medium
+
+  * Add fix for sparc64 buildd problems
+
+ -- Peter Van Eynde <pvaneynd@debian.org>  Tue, 19 Nov 2024 15:54:15 +0100
+
+clisp (1:2.49.20241117.git2640aef-1) unstable; urgency=medium
+
+  * New upstream version 2.49.20241117.git2640aef
+  * Updated and dropped applied patches
+  * Fixed tests/socket.tst failure for hurd
+  * Fixed small errors in debian/copyright
+
+ -- Peter Van Eynde <pvaneynd@debian.org>  Mon, 18 Nov 2024 07:45:01 +0100
+
+clisp (1:2.49.20241103.git386dcd7-3) unstable; urgency=medium
+
+  * Drop clisp-module-pcre again (Closes: #1000089)
+
+ -- Peter Van Eynde <pvaneynd@debian.org>  Fri, 08 Nov 2024 11:17:50 +0100
+
+clisp (1:2.49.20241103.git386dcd7-2) unstable; urgency=medium
+
+  * Add patch for pari 2.17
+
+ -- Peter Van Eynde <pvaneynd@debian.org>  Tue, 05 Nov 2024 19:59:20 +0100
+
+clisp (1:2.49.20241103.git386dcd7-1) unstable; urgency=medium
+
+  * New upstream version 2.49.20241103.git386dcd7
+  * Refreshed patches, dropped pari-2.15.patch which was accepted upstream
+  * Added some berkeley-db merge requests which seem needed
+  * Fix CLX build
+  * Removed a flaky test
+  * Depend on regular libncurses-dev
+  * include fix for startup problems on hurd-i386. Closes: #1021420
+  * Fix manpage error. Closes: #1041788
+  * Adjusted manpage patch, macro got renamed an-trap -> an-input-trap
+  * Adjusted copyright file
+  * Updated Standards-Version, no real changes
+
+ -- Peter Van Eynde <pvaneynd@debian.org>  Sun, 03 Nov 2024 20:05:48 +0100
 
 clisp (1:2.49.20210628.gitde01f0f-3) unstable; urgency=medium
 

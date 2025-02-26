@@ -1341,7 +1341,7 @@ local void gc_sweep1_varobject_page (Page* page)
 #elif (varobject_alignment==4)
   #define uintVLA  uintL
 #elif (varobject_alignment==8)
-  #define uintVLA  uintL2
+  #define uintVLA  uint64
 #else
   #error Unknown value for 'varobject_alignment'!
 #endif
@@ -2460,11 +2460,7 @@ local void move_conses (sintM delta)
     /* shift upwards, from above */
     var gcv_object_t* source = (gcv_object_t*) mem.conses.heap_end;
     var gcv_object_t* source_end = (gcv_object_t*) mem.conses.heap_start;
-   #if !(defined(MIPS) && !defined(GNU))
     var gcv_object_t* dest = (gcv_object_t*) (mem.conses.heap_end += delta);
-   #else  /* circumvent IRIX 4 "cc -ansi" compiler-bug?? */
-    var gcv_object_t* dest = (mem.conses.heap_end += delta, (gcv_object_t*)mem.conses.heap_end);
-   #endif
     mem.conses.heap_start += delta;
     while (source!=source_end) {
       *--dest = *--source;      /* copy an entire cons upwards */
@@ -2474,11 +2470,7 @@ local void move_conses (sintM delta)
     /* shift downwards, from below */
     var gcv_object_t* source = (gcv_object_t*) mem.conses.heap_start;
     var gcv_object_t* source_end = (gcv_object_t*) mem.conses.heap_end;
-    #if !(defined(MIPS) && !defined(GNU))
     var gcv_object_t* dest = (gcv_object_t*) (mem.conses.heap_start += delta);
-    #else  /* circumvent IRIX 4 "cc -ansi" compiler-bug?? */
-    var gcv_object_t* dest = (mem.conses.heap_start += delta, (gcv_object_t*)mem.conses.heap_start);
-    #endif
     mem.conses.heap_end += delta;
     while (source!=source_end) {
       *dest++ = *source++;      /* copy an entire cons downwards */

@@ -1,0 +1,19 @@
+Description: Fixes a test failure on hurd-i386
+ The socket-status test fails in an unexpected way.
+Author: pvaneynd@debian.org
+Bug: https://gitlab.com/gnu-clisp/clisp/-/issues/56
+Forwarded: yes
+Last-Update: 2024-11-17
+---
+This patch header follows DEP-3: http://dep.debian.net/deps/dep3/
+--- clisp.orig/tests/socket.tst
++++ clisp/tests/socket.tst
+@@ -697,7 +697,7 @@
+                   ((:ECONNRESET #.+ECONNRESET+) :APPEND) ; signals ECONNRESET e.g. on Cygwin
+                   (t (os-error-code c)))))))
+       (socket:socket-server-close se))))
+-(:OUTPUT "foo" NIL :APPEND T T #.(if (equal (ext:operating-system-type) "OpenBSD") ':ERROR ':APPEND))
++(:OUTPUT "foo" NIL #.(if (equal (ext:operating-system-type) "GNU/Hurd") ':ERROR ':APPEND) T T #.(if (equal (ext:operating-system-type) "OpenBSD") ':ERROR ':APPEND))
+ 
+ ;; https://sourceforge.net/p/clisp/feature-requests/46/
+ (check-os-error (socket:socket-connect 0)

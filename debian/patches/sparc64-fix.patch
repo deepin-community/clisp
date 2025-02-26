@@ -1,0 +1,20 @@
+Description: Fixed build problems on sparc64
+ As suggested by upstream to fix build problems on the buildd systems.
+Author: Bruno Haible <bruno@clisp.org>
+Origin: upstream
+Forwarded: not needed
+Reviewed-by: pvaneynd@debian.org
+Last-Update: 2024-11-19
+---
+This patch header follows DEP-3: http://dep.debian.net/deps/dep3/
+--- clisp.orig/src/makemake.in
++++ clisp/src/makemake.in
+@@ -1799,7 +1799,7 @@
+ 
+       # Linux/sparc64
+       linux*--sparc64)
+-        Z_XCFLAGS="$Z_XCFLAGS -DNO_ASM"
++        Z_XCFLAGS="$Z_XCFLAGS -DNO_ASM -DNO_ARI_ASM"
+         ;;
+ 
+       # FreeBSD/x86_64
