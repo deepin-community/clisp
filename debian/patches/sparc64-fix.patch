@@ -17,4 +17,4 @@ This patch header follows DEP-3: http://dep.debian.net/deps/dep3/
 +        Z_XCFLAGS="$Z_XCFLAGS -DNO_ASM -DNO_ARI_ASM"
          ;;
  
-       # FreeBSD/x86_64
+       # Hurd/x86_64

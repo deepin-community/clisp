@@ -23,7 +23,6 @@ override_dh_auto_configure:
 		--with-dynamic-ffi \
 		--with-dynamic-modules \
 		--with-module=gdbm \
-		--with-module=berkeley-db \
 		--with-module=rawsock \
 		--with-module=clx/new-clx \
 		--with-module=bindings/glibc \
@@ -31,7 +30,6 @@ override_dh_auto_configure:
 		--with-module=zlib \
 		--with-module=dbus \
 		--with-module=asdf \
-		--with-module=fastcgi \
 		--with-module=libsvm \
 		--with-module=pari
 
