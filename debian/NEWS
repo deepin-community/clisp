@@ -1,0 +1,6 @@
+clisp (1:2.49.20250504.gitf662209-1) unstable; urgency=medium
+
+  This version removes clisp-module-berkeley-db as Berkeley DB is being
+  removed from Debian, see bug #987013 and #1117120.
+
+ -- Peter Van Eynde <pvaneynd@debian.org>  Sun, 05 Oct 2025 16:27:36 +0200

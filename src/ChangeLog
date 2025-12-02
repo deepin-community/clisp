@@ -1,3 +1,84 @@
+2025-05-04  Bruno Haible  <bruno@clisp.org>
+
+	Fix expansion of CL_FFCALL in src/configure.
+	Reported by Adam Sampson <ats@offog.org> at
+	<https://gitlab.com/gnu-clisp/clisp/-/issues/60>.
+	* glm4/lib-link.m4 (AC_LIB_FROMPACKAGE): Import bug fix from gnulib.
+	* src/configure: Regenerated.
+
+2025-04-28  Bruno Haible  <bruno@clisp.org>
+
+	Enable most optimizations on Hurd/x86_64.
+	* lispbibl.d (MAPPABLE_ADDRESS_RANGE_START, MAPPABLE_ADDRESS_RANGE_END,
+	SINGLEMAP_*, *_WORKS): Define for Hurd/x86_64.
+	* Makefile.devel (multibuild-hurd-x86_64): Enable all build variants
+	that work.
+	* makemake.in (Z_XCFLAGS): For Hurd/x86_64, enable all optimizations
+	except ASM.
+
+2025-04-28  Bruno Haible  <bruno@clisp.org>
+
+	Recommend libsigsegv 2.15.
+	* configure (libsigsegv_url): Update to 2.15.
+
+2025-04-27  Bruno Haible  <bruno@clisp.org>
+
+	Find a better way to make things work with gcc 15.1.0.
+	Suggested by Jerry James in
+	<https://gitlab.com/gnu-clisp/clisp/-/merge_requests/12>.
+	According to ISO C 99/11/17 § 6.5.6.(8), ISO C 23 § 6.5.7.(9),
+	computing (T*)0 + constant is undefined behaviour.
+	* package.d (rehash_symtab): Change 'offset' to be of integral type.
+	Re-enable gcc optimizations.
+	(map_symtab, map_symtab_c): Change 'offset' to be of integral type.
+
+2025-04-27  Bruno Haible  <bruno@clisp.org>
+
+	Fix most gcc -Wimplicit-fallthrough warnings.
+	* Makefile.devel (GNULIB_CORE): Add 'attribute'.
+	* lispbibl.d: Include attribute.h.
+	* eval.d: Silence -Wimplicit-fallthrough warnings.
+	* foreign.d (foreign_pointer): Add 'FALLTHROUGH;' statement.
+	* stream.d (interactive_stream_p, READ-BYTE-NO-HANG): Likewise.
+	* lisparit.d (read_float): Likewise.
+	* intelem.d (I_to_UL, I_to_UQ): Likewise.
+	* io.d (GET-MACRO-CHARACTER, test_number_syntax, PARSE-INTEGER,
+	pr_real_number): Likewise.
+	* charstrg.d: Use 'FALLTHROUGH;' statements.
+	* hashtabl.d: Likewise.
+	* pathname.d: Likewise.
+	* spvw.d: Likewise.
+
+2025-04-27  Bruno Haible  <bruno@clisp.org>
+
+	Fix a gcc -Wformat-overflow warning.
+	* utils/varbrace.c (line_repeat_else, line_repeat_endif): Make buf
+	larger.
+
+2025-04-27  Bruno Haible  <bruno@clisp.org>
+
+	Fix a gcc warning "macro ‘__DATE__’ might prevent reproducible builds".
+	* genclisph.d (main): Don't store a time stamp in clisp-test.c; its
+	time stamp on disk is sufficient.
+
+2025-04-26  Bruno Haible  <bruno@clisp.org>
+
+	Work around a gcc 15.1.0 bug on x86_64.
+	* package.d (rehash_symtab): When compiled by GCC 15, disable all
+	optimizations.
+
+2024-12-28  Bruno Haible  <bruno@clisp.org>
+
+	Update after gnulib changed.
+	* Makefile.devel (GNULIB_CORE): Use the new names of renamed gnulib
+	modules.
+
+2024-12-05  Bruno Haible  <bruno@clisp.org>
+
+	Revisit Linux/riscv64 builds.
+	* Makefile.devel (multibuild-linux-riscv64): Enable all build variants
+	that work.
+
 2024-11-23  Bruno Haible  <bruno@clisp.org>
 
 	Upgrade ASDF. This fixes a bug on Haiku.

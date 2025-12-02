@@ -1,3 +1,32 @@
+clisp (1:2.49.20250504.gitf662209-2) sid; urgency=medium
+
+  * Remove clisp-module-berkeley-db as libdb is leaving Debian.
+    (Closes: #1119213
+
+ -- Peter Van Eynde <pvaneynd@debian.org>  Fri, 31 Oct 2025 08:05:55 +0100
+
+clisp (1:2.49.20250504.gitf662209-1) unstable; urgency=medium
+
+  * New upstream version.
+  * This new version fixes the ftbfs with GCC-15 (Closes: #1096442)
+
+ -- Peter Van Eynde <pvaneynd@debian.org>  Wed, 24 Sep 2025 11:13:50 +0200
+
+clisp (1:2.49.20241228.gitc3ec11b-2) unstable; urgency=medium
+
+  * Do dummy upload for migration (Closes: #1101188)
+
+ -- Peter Van Eynde <pvaneynd@debian.org>  Mon, 24 Mar 2025 14:00:26 +0100
+
+clisp (1:2.49.20241228.gitc3ec11b-1) unstable; urgency=medium
+
+  * New upstream version 2.49.20241228.gitc3ec11b
+  * Remove clisp-module-fastcgi, as the library it uses has a latent security
+    issue. (Closes: 1099798)
+  * Updated Standards-Version, no changes
+
+ -- Peter Van Eynde <pvaneynd@debian.org>  Sat, 08 Mar 2025 13:48:33 +0100
+
 clisp (1:2.49.20241123.git9ff8aed-1) unstable; urgency=medium
 
   * New upstream version 2.49.20241123.git9ff8aed
